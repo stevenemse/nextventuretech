@@ -35,7 +35,7 @@ export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0)
 
   return (
-    <section className="py-20 bg-slate-50" aria-labelledby="faq-heading">
+    <section className="py-20 bg-[#f7f7f3]" aria-labelledby="faq-heading">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-blue-600 mb-2"><span aria-hidden="true">&#47;&#47;</span> FAQ</p>

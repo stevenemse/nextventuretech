@@ -1,11 +1,9 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, Phone } from 'lucide-react'
+import { ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react'
 import { getPublishedServices } from '@/services/services.service'
 import { getPublishedWorks } from '@/services/works.service'
 import { getActiveStats } from '@/services/settings.service'
-import { StatsBar } from '@/components/public/stats-bar'
 import { ServicesMarquee } from '@/components/public/services-marquee'
-import { ServiceCard } from '@/components/public/service-card'
 import { WorkCard } from '@/components/public/work-card'
 import { FaqSection } from '@/components/public/faq-section'
 import { siteConfig } from '@/config/site'
@@ -16,12 +14,9 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 }
 
-const TRUST_POINTS = [
-  'Livraison dans les délais convenus',
-  'Support réactif et disponible',
-  'Technologies modernes et évolutives',
-  'Prix transparents sans surprises',
-]
+const ICON_MAP: Record<string, string> = {
+  Globe: '🌐', Palette: '🎨', Brain: '🤖', Video: '🎬', Sparkles: '✨',
+}
 
 export default async function HomePage() {
   const [services, works, stats] = await Promise.all([
@@ -32,174 +27,315 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ─── HERO ──────────────────────────────────────────────── */}
+      {/* ─── HERO ──────────────────────────────────────────── */}
       <section
-        className="relative min-h-screen bg-[#0a0f1e] flex items-center overflow-hidden pt-16"
+        className="relative min-h-screen bg-[#0d1117] flex items-center overflow-hidden pt-16"
         aria-label="Hero"
       >
-        {/* Décorations de fond */}
+        {/* Grille de fond style design inspirant */}
+        <div
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(59,130,246,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.5) 1px, transparent 1px)',
+            backgroundSize: '60px 60px',
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Halos lumineux */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-          <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl" />
-          <div className="absolute top-1/2 -left-40 h-80 w-80 rounded-full bg-blue-800/20 blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
-          {/* Grille */}
-          <div
-            className="absolute inset-0 opacity-5"
-            style={{ backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)', backgroundSize: '48px 48px' }}
-          />
+          <div className="absolute top-1/4 right-1/4 h-[500px] w-[500px] rounded-full bg-blue-600/15 blur-[120px]" />
+          <div className="absolute bottom-1/4 left-1/4 h-[400px] w-[400px] rounded-full bg-blue-900/20 blur-[100px]" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-            {/* Texte */}
-            <div className="animate-fade-in-up">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-600/10 px-4 py-1.5 text-sm text-blue-400 mb-6">
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" aria-hidden="true" />
-                Agence Digitale — Douala, Cameroun
+        <div className="relative mx-auto max-w-7xl px-4 py-28 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+
+            {/* ── Texte gauche ── */}
+            <div>
+              {/* Badge "Hello There!" */}
+              <div className="mb-6 inline-flex items-center gap-2 rounded-lg border border-blue-500/30 bg-blue-600/10 px-4 py-2 text-sm text-blue-400">
+                <span className="h-2 w-2 rounded-full bg-blue-400 animate-pulse" aria-hidden="true" />
+                Bonjour ! Bienvenue sur NextVenture Tech
               </div>
 
               <h1 className="text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
                 Transformer vos{' '}
-                <span className="text-blue-400">idées</span>{' '}
+                <span className="relative inline-block">
+                  <span className="text-blue-400">idées</span>
+                  {/* Soulignement décoratif */}
+                  <svg className="absolute -bottom-1 left-0 w-full" height="4" viewBox="0 0 100 4" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0,2 Q50,0 100,2" stroke="#3b82f6" strokeWidth="2" fill="none" strokeDasharray="4 2" />
+                  </svg>
+                </span>{' '}
                 en{' '}
-                <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-400 via-blue-300 to-blue-500 bg-clip-text text-transparent">
                   réalité
                 </span>
               </h1>
 
-              <p className="mt-6 text-lg text-slate-400 leading-relaxed max-w-lg">
-                NextVenture Tech conçoit des sites web, des identités visuelles et des solutions IA
-                pour propulser votre activité au niveau supérieur.
+              <p className="mt-6 text-lg leading-relaxed text-slate-400 max-w-lg">
+                Agence digitale à Douala — nous concevons des sites web, des identités visuelles
+                et des solutions IA qui propulsent votre activité.
               </p>
 
-              <ul className="mt-6 flex flex-col gap-2" aria-label="Avantages">
-                {TRUST_POINTS.map((point) => (
-                  <li key={point} className="flex items-center gap-2 text-sm text-slate-400">
+              <ul className="mt-6 grid grid-cols-2 gap-2" aria-label="Points forts">
+                {[
+                  'Sites web sur mesure',
+                  'Design professionnel',
+                  'Solutions IA',
+                  'Support réactif',
+                ].map((p) => (
+                  <li key={p} className="flex items-center gap-2 text-sm text-slate-400">
                     <CheckCircle2 className="h-4 w-4 shrink-0 text-blue-500" aria-hidden="true" />
-                    {point}
+                    {p}
                   </li>
                 ))}
               </ul>
 
-              <div className="mt-8 flex flex-wrap gap-4">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/reserver"
-                  className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-500 transition-colors"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-500 transition-all"
                 >
-                  Réserver un Appel
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  Réserver un Appel Gratuit
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/realisations"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm"
                 >
-                  Voir nos réalisations
+                  Voir nos projets
+                  <ChevronRight className="h-4 w-4 opacity-60" aria-hidden="true" />
                 </Link>
               </div>
             </div>
 
-            {/* Carte flottante */}
-            <div className="hidden lg:flex justify-center">
-              <div className="relative">
-                {/* Card principale */}
-                <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 w-80">
-                  <p className="text-xs text-slate-400 mb-4 uppercase tracking-wide">Nos services</p>
-                  <div className="flex flex-col gap-3">
-                    {['🌐 Web Design', '🎨 Graphic Design', '🤖 Intelligence Artificielle', '🎬 Montage Vidéo', '✨ Motion Design'].map((s) => (
-                      <div key={s} className="flex items-center gap-3 rounded-lg bg-white/5 px-3 py-2">
-                        <span className="text-sm text-white">{s}</span>
-                      </div>
-                    ))}
-                  </div>
+            {/* ── Visuel droite — cartes flottantes ── */}
+            <div className="hidden lg:block relative">
+              {/* Carte principale */}
+              <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6">
+                {/* Badge UX/UI design flottant */}
+                <div className="absolute -top-3 right-8 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
+                  Digital Agency
                 </div>
-                {/* Badge flottant */}
-                <div className="absolute -top-4 -right-4 rounded-xl bg-blue-600 px-4 py-2 shadow-lg">
-                  <p className="text-xs font-bold text-white">50+ Projets</p>
+
+                <p className="mb-4 text-xs font-medium uppercase tracking-widest text-blue-400">Nos expertises</p>
+                <div className="flex flex-col gap-2.5">
+                  {[
+                    { icon: '🌐', label: 'Web Design & Développement' },
+                    { icon: '🎨', label: 'Graphic Design & Branding' },
+                    { icon: '🤖', label: 'Intelligence Artificielle' },
+                    { icon: '🎬', label: 'Montage Vidéo' },
+                    { icon: '✨', label: 'Motion Design' },
+                  ].map(({ icon, label }) => (
+                    <div
+                      key={label}
+                      className="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-2.5 hover:bg-white/10 transition-colors"
+                    >
+                      <span className="text-lg" aria-hidden="true">{icon}</span>
+                      <span className="text-sm font-medium text-slate-200">{label}</span>
+                    </div>
+                  ))}
                 </div>
-                <div className="absolute -bottom-4 -left-4 rounded-xl bg-green-500 px-4 py-2 shadow-lg">
-                  <p className="text-xs font-bold text-white flex items-center gap-1">
-                    <Phone className="h-3 w-3" aria-hidden="true" /> Disponible 24/7
-                  </p>
-                </div>
+              </div>
+
+              {/* Stats flottantes */}
+              <div className="absolute -bottom-5 -left-5 rounded-xl border border-white/10 bg-[#0d1117]/90 backdrop-blur-sm px-5 py-3 shadow-xl">
+                <p className="text-2xl font-extrabold text-white">50+</p>
+                <p className="text-xs text-slate-400">Projets réalisés</p>
+              </div>
+              <div className="absolute -top-5 -right-5 rounded-xl border border-white/10 bg-blue-600/20 backdrop-blur-sm px-5 py-3 shadow-xl">
+                <p className="text-2xl font-extrabold text-blue-300">4.8★</p>
+                <p className="text-xs text-slate-400">Note moyenne</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── MARQUEE ───────────────────────────────────────────── */}
+      {/* ─── MARQUEE ───────────────────────────────────────── */}
       <ServicesMarquee />
 
-      {/* ─── STATS ─────────────────────────────────────────────── */}
-      <StatsBar stats={stats} />
-
-      {/* ─── SERVICES ALTERNÉS ──────────────────────────────────── */}
-      {services.length > 0 && (
-        <section className="py-20 bg-white" aria-labelledby="services-heading">
+      {/* ─── STATS ─────────────────────────────────────────── */}
+      {stats.length > 0 && (
+        <section className="bg-[#f7f7f3] py-14 border-b border-slate-200" aria-label="Statistiques">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-14 text-center">
-              <p className="text-sm font-semibold uppercase tracking-widest text-blue-600 mb-2"><span aria-hidden="true">&#47;&#47;</span> Nos Services</p>
-              <h2 id="services-heading" className="text-3xl font-extrabold text-slate-900">
-                Ce que nous <span className="text-blue-600">faisons</span>
-              </h2>
-            </div>
-            <div className="flex flex-col gap-20">
-              {services.slice(0, 4).map((svc, i) => (
-                <ServiceCard key={svc.id} service={svc} variant="alternate" index={i} />
+            <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+              {stats.map((stat) => (
+                <div key={stat.id} className="flex flex-col items-center text-center">
+                  <span className="text-4xl font-extrabold text-blue-600 tabular-nums">{stat.value}</span>
+                  <span className="mt-1 text-sm font-medium text-slate-500">{stat.label}</span>
+                </div>
               ))}
             </div>
-            {services.length > 4 && (
-              <div className="mt-12 text-center">
-                <Link
-                  href="/services"
-                  className="inline-flex items-center gap-2 rounded-xl border border-blue-600 px-6 py-3 text-sm font-semibold text-blue-600 hover:bg-blue-50 transition-colors"
-                >
-                  Voir tous les services <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-              </div>
-            )}
           </div>
         </section>
       )}
 
-      {/* ─── RÉALISATIONS ──────────────────────────────────────── */}
-      {works.length > 0 && (
-        <section className="py-20 bg-slate-50" aria-labelledby="works-heading">
+      {/* ─── SERVICES — cartes sombres style inspirant ─────── */}
+      {services.length > 0 && (
+        <section className="py-20 bg-[#f7f7f3]" aria-labelledby="services-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 text-center">
-              <p className="text-sm font-semibold uppercase tracking-widest text-blue-600 mb-2"><span aria-hidden="true">&#47;&#47;</span> Nos Derniers Projets</p>
-              <h2 id="works-heading" className="text-3xl font-extrabold text-slate-900">
-                Explorez notre <span className="text-blue-600">Showcase</span>
-              </h2>
+            <div className="mb-12 flex items-end justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 mb-2">
+                  — Service
+                </p>
+                <h2 id="services-heading" className="text-3xl font-extrabold text-slate-900">
+                  Ce que nous offrons
+                </h2>
+              </div>
+              <Link
+                href="/services"
+                className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+              >
+                Voir tous les services <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
             </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+
+            {/* Grille de cartes sombres */}
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {services.map((svc) => {
+                const icon = ICON_MAP[svc.icon ?? ''] ?? '⚡'
+                return (
+                  <div
+                    key={svc.id}
+                    className="group flex flex-col rounded-2xl bg-[#0d1117] border border-white/10 p-6 hover:border-blue-500/50 transition-all duration-300"
+                  >
+                    {/* Icône */}
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600/15 text-2xl">
+                      {icon}
+                    </div>
+                    <h3 className="mb-2 text-base font-bold text-white">{svc.title}</h3>
+                    {svc.description && (
+                      <p className="mb-5 text-sm leading-relaxed text-slate-400 flex-1 line-clamp-3">
+                        {svc.description}
+                      </p>
+                    )}
+                    <Link
+                      href={`/services#${svc.slug}`}
+                      className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-400 group-hover:text-blue-300 transition-colors"
+                    >
+                      Read More
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    </Link>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ─── ABOUT / STATS inline ──────────────────────────── */}
+      <section className="bg-[#0d1117] py-20" aria-labelledby="about-heading">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            {/* Photo / visuel gauche */}
+            <div className="relative flex justify-center">
+              {/* Cercle décoratif */}
+              <div className="relative h-72 w-72 rounded-full bg-blue-600/20 flex items-center justify-center">
+                <div className="h-56 w-56 rounded-full bg-blue-600/30 flex items-center justify-center">
+                  <span className="text-7xl" aria-hidden="true">🚀</span>
+                </div>
+              </div>
+              {/* Badge flottant */}
+              <div className="absolute bottom-4 right-0 rounded-xl border border-white/10 bg-[#0d1117]/90 px-4 py-2 text-center">
+                <p className="text-lg font-bold text-white">30+</p>
+                <p className="text-xs text-slate-400">Clients satisfaits</p>
+              </div>
+            </div>
+
+            {/* Texte droite */}
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-blue-400">
+                — About us
+              </p>
+              <h2 id="about-heading" className="mb-4 text-3xl font-extrabold text-white">
+                L&apos;histoire derrière{' '}
+                <span className="text-blue-400">NextVenture Tech</span>
+              </h2>
+              <p className="mb-8 text-slate-400 leading-relaxed">
+                NextVenture Tech est né d&apos;une mission simple — transformer les idées
+                en solutions digitales impactantes. Aujourd&apos;hui, nous aidons les entreprises
+                à croître grâce au design, à l&apos;innovation et à une approche centrée sur les résultats.
+              </p>
+
+              {/* Stats inline */}
+              <div className="flex flex-wrap gap-8">
+                {stats.slice(0, 3).map((stat) => (
+                  <div key={stat.id}>
+                    <p className="text-3xl font-extrabold text-white">{stat.value}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                href="/contact"
+                className="mt-8 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-500 transition-colors"
+              >
+                Nous contacter <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── RÉALISATIONS ──────────────────────────────────── */}
+      {works.length > 0 && (
+        <section className="py-20 bg-[#f7f7f3]" aria-labelledby="works-heading">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 flex items-end justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 mb-2">
+                  — Nos Derniers Projets
+                </p>
+                <h2 id="works-heading" className="text-3xl font-extrabold text-slate-900">
+                  Explorez notre <span className="text-blue-600">Showcase</span>
+                </h2>
+              </div>
+              <Link
+                href="/realisations"
+                className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+              >
+                Voir tous les projets <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2">
               {works.slice(0, 4).map((work) => (
                 <WorkCard key={work.id} work={work} />
               ))}
             </div>
-            <div className="mt-10 text-center">
-              <Link
-                href="/realisations"
-                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
-              >
-                Voir tous les projets <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            </div>
           </div>
         </section>
       )}
 
-      {/* ─── FAQ ───────────────────────────────────────────────── */}
+      {/* ─── FAQ ───────────────────────────────────────────── */}
       <FaqSection />
 
-      {/* ─── CTA FINAL ────────────────────────────────────────── */}
-      <section className="bg-[#0a0f1e] py-20" aria-label="Appel à l'action">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-            Prêt à lancer votre <span className="text-blue-400">projet</span> ?
+      {/* ─── CTA FINAL ─────────────────────────────────────── */}
+      <section className="bg-[#0d1117] py-24 relative overflow-hidden" aria-label="Appel à l'action">
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto max-w-3xl px-4 text-center">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-blue-400">
+            — Démarrez maintenant
+          </p>
+          <h2 className="text-4xl font-extrabold text-white sm:text-5xl">
+            Prêt pour votre{' '}
+            <span className="text-blue-400">prochain projet</span> ?
           </h2>
-          <p className="mt-4 text-lg text-slate-400">
-            Réservez un appel gratuit de 30 minutes et discutons de vos besoins.
+          <p className="mt-5 text-lg text-slate-400">
+            Réservez un appel gratuit de 30 minutes. Pas d&apos;engagement, juste une conversation.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
@@ -211,7 +347,7 @@ export default async function HomePage() {
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-8 py-4 text-base font-semibold text-white hover:bg-white/10 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-8 py-4 text-base font-semibold text-white hover:bg-white/10 transition-colors backdrop-blur-sm"
             >
               Nous écrire
             </Link>

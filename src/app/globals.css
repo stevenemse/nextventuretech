@@ -9,10 +9,10 @@
   --color-accent: #3b82f6;
 
   /* Neutres */
-  --color-background: #ffffff;
+  --color-background: #f7f7f3;   /* Blanc cassé — plus agréable à l'œil */
   --color-foreground: #0f172a;
   --color-muted: #64748b;
-  --color-muted-bg: #f8fafc;
+  --color-muted-bg: #f0f0eb;
   --color-border: #e2e8f0;
 
   /* Feedback */
@@ -39,7 +39,7 @@ html {
 }
 
 body {
-  background-color: var(--color-background);
+  background-color: #f7f7f3;  /* Blanc cassé par défaut */
   color: var(--color-foreground);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;

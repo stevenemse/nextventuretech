@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
-import { Button } from '@/components/ui/button'
 
 const NAV_LINKS = [
   { href: '/',             label: 'Accueil' },
@@ -17,16 +16,15 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen]     = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
+    const onScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Fermer le menu mobile au changement de route
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setIsOpen(false) }, [pathname])
 
@@ -35,7 +33,7 @@ export function Navbar() {
       className={cn(
         'fixed top-0 z-50 w-full transition-all duration-300',
         scrolled
-          ? 'border-b border-white/10 bg-[#0a0f1e]/95 backdrop-blur-md shadow-lg'
+          ? 'bg-[#0a0f1e]/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20'
           : 'bg-transparent',
       )}
     >
@@ -44,17 +42,20 @@ export function Navbar() {
         aria-label="Navigation principale"
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-600">
-            <Zap className="h-5 w-5 text-white" aria-hidden="true" />
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md"
+        >
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+            <Zap className="h-4 w-4 text-white" aria-hidden="true" />
           </div>
-          <span className="text-lg font-bold text-white">
+          <span className="text-base font-bold text-white tracking-tight">
             NextVenture <span className="text-blue-400">Tech</span>
           </span>
         </Link>
 
         {/* Liens desktop */}
-        <ul className="hidden items-center gap-1 md:flex" role="list">
+        <ul className="hidden items-center gap-0.5 md:flex" role="list">
           {NAV_LINKS.map(({ href, label }) => {
             const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
             return (
@@ -62,10 +63,10 @@ export function Navbar() {
                 <Link
                   href={href}
                   className={cn(
-                    'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                    'rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200',
                     isActive
-                      ? 'text-blue-400'
-                      : 'text-slate-300 hover:text-white',
+                      ? 'text-white bg-white/10'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5',
                   )}
                   aria-current={isActive ? 'page' : undefined}
                 >
@@ -78,17 +79,19 @@ export function Navbar() {
 
         {/* CTA Desktop */}
         <div className="hidden md:flex items-center gap-3">
-          <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-500 text-white border-0">
-            <Link href="/reserver">Réserver un Appel</Link>
-          </Button>
+          <Link
+            href="/reserver"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500 transition-colors"
+          >
+            Réserver un Appel
+          </Link>
         </div>
 
-        {/* Burger mobile */}
+        {/* Burger */}
         <button
-          className="flex h-9 w-9 items-center justify-center rounded-md text-slate-300 hover:text-white md:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-300 hover:bg-white/10 hover:text-white transition-colors md:hidden"
           onClick={() => setIsOpen((o) => !o)}
           aria-expanded={isOpen}
-          aria-controls="mobile-menu"
           aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
         >
           {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -97,11 +100,8 @@ export function Navbar() {
 
       {/* Menu mobile */}
       {isOpen && (
-        <div
-          id="mobile-menu"
-          className="border-t border-white/10 bg-[#0a0f1e]/98 backdrop-blur-md md:hidden"
-        >
-          <ul className="flex flex-col px-4 pb-4 pt-2" role="list">
+        <div className="border-t border-white/10 bg-[#0a0f1e]/95 backdrop-blur-xl md:hidden">
+          <ul className="flex flex-col gap-1 px-4 pb-4 pt-2">
             {NAV_LINKS.map(({ href, label }) => {
               const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
               return (
@@ -109,8 +109,10 @@ export function Navbar() {
                   <Link
                     href={href}
                     className={cn(
-                      'block rounded-md px-3 py-3 text-sm font-medium',
-                      isActive ? 'text-blue-400' : 'text-slate-300',
+                      'block rounded-lg px-4 py-2.5 text-sm font-medium transition-colors',
+                      isActive
+                        ? 'text-white bg-white/10'
+                        : 'text-slate-300 hover:text-white hover:bg-white/5',
                     )}
                   >
                     {label}
@@ -118,10 +120,13 @@ export function Navbar() {
                 </li>
               )
             })}
-            <li className="mt-3">
-              <Button asChild className="w-full bg-blue-600 hover:bg-blue-500 text-white">
-                <Link href="/reserver">Réserver un Appel</Link>
-              </Button>
+            <li className="mt-2">
+              <Link
+                href="/reserver"
+                className="flex w-full items-center justify-center rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 transition-colors"
+              >
+                Réserver un Appel
+              </Link>
             </li>
           </ul>
         </div>

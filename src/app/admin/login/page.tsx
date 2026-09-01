@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { ArrowLeft, Zap } from 'lucide-react'
 import { LoginForm } from './login-form'
 
 export const metadata: Metadata = {
@@ -8,16 +10,35 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
-      <div className="w-full max-w-sm">
-        {/* Logo / Marque */}
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-blue-600">NextVenture Tech</h1>
-          <p className="mt-1 text-sm text-slate-500">Dashboard Administrateur</p>
+    <div className="flex min-h-screen items-center justify-center bg-[#0a0f1e] p-4">
+      {/* Décorations */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-blue-600/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-blue-800/10 blur-3xl" />
+      </div>
+
+      <div className="relative w-full max-w-sm">
+        {/* Bouton retour accueil */}
+        <Link
+          href="/"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Retour au site
+        </Link>
+
+        {/* Logo */}
+        <div className="mb-8 flex flex-col items-center text-center">
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600">
+            <Zap className="h-6 w-6 text-white" aria-hidden="true" />
+          </div>
+          <h1 className="text-2xl font-bold text-white">NextVenture Tech</h1>
+          <p className="mt-1 text-sm text-slate-400">Dashboard Administrateur</p>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h2 className="mb-6 text-lg font-semibold text-slate-900">Connexion</h2>
+        {/* Card */}
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+          <h2 className="mb-6 text-lg font-semibold text-white">Connexion</h2>
           <LoginForm />
         </div>
       </div>
