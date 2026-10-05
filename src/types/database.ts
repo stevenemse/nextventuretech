@@ -138,7 +138,29 @@ export interface UserRole {
   created_at: string
 }
 
-// ─── Joined types (for UI) ───────────────────────────────────────────────────
+// ─── blog_posts ─────────────────────────────────────────────
+export interface BlogPost {
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  content: string | null
+  cover_image_url: string | null
+  author: string
+  category: string | null
+  tags: string[]
+  is_published: boolean
+  published_at: string | null
+  seo_title: string | null
+  seo_description: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type BlogPostInsert = Omit<BlogPost, 'id' | 'created_at' | 'updated_at'>
+export type BlogPostUpdate = Partial<BlogPostInsert>
+
+
 export interface PricingPlanWithService extends PricingPlan {
   services: Pick<Service, 'id' | 'title' | 'slug'>
 }

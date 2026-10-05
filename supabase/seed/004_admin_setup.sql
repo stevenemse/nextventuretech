@@ -16,10 +16,10 @@
 
 DO $$
 DECLARE
-  v_admin_id UUID := 'REMPLACER-PAR-UUID-ADMIN';
+  v_admin_id UUID := '8e44d9e0-1db6-460a-9f20-96e9898aa027';
 BEGIN
   -- Vérifier que l'UUID a bien été remplacé
-  IF v_admin_id = 'REMPLACER-PAR-UUID-ADMIN' THEN
+  IF v_admin_id = '8e44d9e0-1db6-460a-9f20-96e9898aa027' THEN
     RAISE EXCEPTION
       'Vous devez remplacer REMPLACER-PAR-UUID-ADMIN par le vrai UUID de votre compte admin.';
   END IF;
