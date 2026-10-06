@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Zap } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { LoginForm } from './login-form'
 
 export const metadata: Metadata = {
@@ -29,9 +29,14 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600">
-            <Zap className="h-6 w-6 text-white" aria-hidden="true" />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo/nextventure-logo-dark.svg"
+            alt="Logo NextVenture Tech"
+            width={95}
+            height={52}
+            className="mb-3 h-13 w-auto"
+          />
           <h1 className="text-2xl font-bold text-white">NextVenture Tech</h1>
           <p className="mt-1 text-sm text-slate-400">Dashboard Administrateur</p>
         </div>

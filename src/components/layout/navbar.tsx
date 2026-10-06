@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ArrowRight, Menu, X, Zap } from 'lucide-react'
+import { ArrowRight, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 
 const NAV_LINKS = [
@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: '/services',     label: 'Services' },
   { href: '/tarifs',       label: 'Tarifs' },
   { href: '/realisations', label: 'Réalisations' },
+  { href: '/blog',         label: 'Blog' },
   { href: '/contact',      label: 'Contact' },
 ]
 
@@ -43,9 +44,14 @@ export function Navbar() {
           href="/"
           className="flex shrink-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-full"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-glow">
-            <Zap className="h-4 w-4 text-white" aria-hidden="true" />
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo/nextventure-logo-light.svg"
+            alt="Logo NextVenture Tech"
+            width={65}
+            height={36}
+            className="h-8 w-auto sm:h-9"
+          />
           <span className="text-base font-extrabold tracking-tight text-ink">
             NextVenture <span className="text-blue-600">Tech</span>
           </span>

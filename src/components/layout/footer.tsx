@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, Mail, Phone, Clock, Zap, ArrowRight } from 'lucide-react'
+import { MapPin, Mail, Phone, Clock, ArrowRight } from 'lucide-react'
 import { getSiteSettings } from '@/services/settings.service'
 import { siteConfig } from '@/config/site'
 
@@ -14,6 +14,7 @@ const LINKS = {
   company: [
     { href: '/realisations', label: 'Réalisations' },
     { href: '/tarifs',       label: 'Tarifs' },
+    { href: '/blog',         label: 'Blog' },
     { href: '/contact',      label: 'Contact' },
     { href: '/reserver',     label: 'Réserver un Appel' },
   ],
@@ -81,9 +82,14 @@ export async function Footer() {
           {/* Marque */}
           <div>
             <Link href="/" className="mb-4 flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600">
-                <Zap className="h-4 w-4 text-white" aria-hidden="true" />
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo/nextventure-logo-dark.svg"
+                alt="Logo NextVenture Tech"
+                width={65}
+                height={36}
+                className="h-9 w-auto"
+              />
               <span className="text-lg font-extrabold tracking-tight text-white">
                 NextVenture <span className="text-blue-400">Tech</span>
               </span>
@@ -127,7 +133,7 @@ export async function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
-                <a href={`mailto:${email}`} className="transition-colors hover:text-blue-400">{email}</a>
+                <a href={`mailto:${email}`} className="break-all transition-colors hover:text-blue-400">{email}</a>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />

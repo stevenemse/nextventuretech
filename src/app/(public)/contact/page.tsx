@@ -67,18 +67,21 @@ export default async function ContactPage() {
                 {contactInfo.map(({ icon: Icon, label, value, href }) => (
                   <div
                     key={label}
-                    className="rounded-3xl border border-border bg-surface p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
+                    className="min-w-0 rounded-3xl border border-border bg-surface p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
                   >
                     <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-soft">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </span>
                     <p className="text-xs font-bold uppercase tracking-wide text-muted">{label}</p>
                     {href ? (
-                      <a href={href} className="mt-0.5 block text-sm font-bold text-ink transition-colors hover:text-blue-600">
+                      <a
+                        href={href}
+                        className="mt-0.5 block text-sm font-bold break-words text-ink [overflow-wrap:anywhere] transition-colors hover:text-blue-600"
+                      >
                         {value}
                       </a>
                     ) : (
-                      <p className="mt-0.5 text-sm font-bold text-ink">{value}</p>
+                      <p className="mt-0.5 text-sm font-bold break-words text-ink [overflow-wrap:anywhere]">{value}</p>
                     )}
                   </div>
                 ))}
