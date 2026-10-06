@@ -11,10 +11,10 @@ export function PricingCard({ plan }: PricingCardProps) {
   return (
     <div
       className={cn(
-        'relative flex flex-col rounded-2xl border p-7 transition-shadow',
+        'relative flex flex-col rounded-3xl border p-8 transition-all duration-300',
         plan.is_popular
-          ? 'border-blue-600 bg-gradient-to-b from-blue-600 to-blue-700 text-white shadow-2xl shadow-blue-600/30 scale-[1.02]'
-          : 'border-slate-200 bg-white text-slate-900 hover:shadow-lg',
+          ? 'border-blue-600 bg-gradient-to-b from-blue-600 to-indigo-700 text-white shadow-glow lg:scale-[1.03]'
+          : 'border-border bg-surface text-slate-900 shadow-soft hover:-translate-y-1 hover:shadow-card',
       )}
     >
       {/* Badge Populaire */}
@@ -77,7 +77,7 @@ export function PricingCard({ plan }: PricingCardProps) {
         <Link
           href={plan.is_custom_quote ? '/contact' : '/reserver'}
           className={cn(
-            'flex w-full items-center justify-center rounded-xl py-2.5 text-sm font-semibold transition-colors',
+            'flex w-full items-center justify-center rounded-full py-3 text-sm font-bold transition-colors',
             plan.is_popular
               ? 'bg-white text-blue-600 hover:bg-blue-50'
               : 'bg-blue-600 text-white hover:bg-blue-700',

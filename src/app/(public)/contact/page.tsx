@@ -30,51 +30,69 @@ export default async function ContactPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-[#0a0f1e] pt-32 pb-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-blue-400 mb-3"><span aria-hidden="true">&#47;&#47;</span> Contact</p>
-          <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
-            Obtenez votre devis <span className="text-blue-400">gratuit</span>
+      {/* Hero clair */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#eef2ff] to-background pb-16 pt-40">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgb(43 92 246 / 0.05) 1px, transparent 1px), linear-gradient(90deg, rgb(43 92 246 / 0.05) 1px, transparent 1px)',
+            backgroundSize: '56px 56px',
+            maskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%)',
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
+            — Contact
+          </p>
+          <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+            Obtenez votre devis <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">gratuit</span>
           </h1>
-          <p className="mt-4 text-lg text-slate-400 max-w-xl mx-auto">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
             Répondons à votre message sous 24h. Discutons de votre projet !
           </p>
         </div>
       </section>
 
       {/* Corps */}
-      <section className="py-20 bg-white">
+      <section className="pb-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-3">
-            {/* Infos contact */}
-            <div>
-              <h2 className="text-xl font-bold text-slate-900 mb-6">Nos coordonnées</h2>
-              <div className="flex flex-col gap-6">
+          <div className="reveal grid gap-10 lg:grid-cols-5">
+            {/* Infos contact — cartes 2x2 */}
+            <div className="lg:col-span-2">
+              <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-ink">Nos coordonnées</h2>
+              <div className="grid gap-4 sm:grid-cols-2">
                 {contactInfo.map(({ icon: Icon, label, value, href }) => (
-                  <div key={label} className="flex items-start gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50">
-                      <Icon className="h-5 w-5 text-blue-600" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-slate-400 uppercase tracking-wide">{label}</p>
-                      {href ? (
-                        <a href={href} className="text-sm font-medium text-slate-900 hover:text-blue-600 transition-colors">
-                          {value}
-                        </a>
-                      ) : (
-                        <p className="text-sm font-medium text-slate-900">{value}</p>
-                      )}
-                    </div>
+                  <div
+                    key={label}
+                    className="rounded-3xl border border-border bg-surface p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
+                  >
+                    <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-soft">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <p className="text-xs font-bold uppercase tracking-wide text-muted">{label}</p>
+                    {href ? (
+                      <a href={href} className="mt-0.5 block text-sm font-bold text-ink transition-colors hover:text-blue-600">
+                        {value}
+                      </a>
+                    ) : (
+                      <p className="mt-0.5 text-sm font-bold text-ink">{value}</p>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Formulaire */}
-            <div className="lg:col-span-2">
-              <h2 className="text-xl font-bold text-slate-900 mb-6">Décrivez votre projet</h2>
-              <ContactForm services={services.map((s) => ({ id: s.id, title: s.title }))} />
+            <div className="lg:col-span-3">
+              <div className="rounded-[2rem] border border-border bg-surface p-6 shadow-soft sm:p-9">
+                <h2 className="mb-7 text-2xl font-extrabold tracking-tight text-ink">
+                  Décrivez votre projet
+                </h2>
+                <ContactForm services={services.map((s) => ({ id: s.id, title: s.title }))} />
+              </div>
             </div>
           </div>
         </div>

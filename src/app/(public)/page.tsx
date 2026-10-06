@@ -1,5 +1,9 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react'
+import {
+  ArrowRight, ArrowUpRight, Check, ChevronRight, Compass, Globe, Palette,
+  BrainCircuit, Clapperboard, Sparkles, Play, Rocket,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { getPublishedServices } from '@/services/services.service'
 import { getPublishedWorks } from '@/services/works.service'
 import { getActiveStats } from '@/services/settings.service'
@@ -14,9 +18,28 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 }
 
-const ICON_MAP: Record<string, string> = {
-  Globe: '🌐', Palette: '🎨', Brain: '🤖', Video: '🎬', Sparkles: '✨',
+const ICON_MAP: Record<string, LucideIcon> = {
+  Globe: Globe,
+  Palette: Palette,
+  Brain: BrainCircuit,
+  Video: Clapperboard,
+  Sparkles: Sparkles,
 }
+
+const TILE_GRADIENTS = [
+  'from-blue-500 to-indigo-600',
+  'from-violet-500 to-purple-600',
+  'from-sky-400 to-blue-600',
+  'from-fuchsia-500 to-pink-600',
+  'from-emerald-400 to-teal-600',
+]
+
+const VALUE_PROPS = [
+  { icon: Globe,    title: 'Sites web sur mesure',   desc: 'Rapides, modernes et pensés pour convertir.' },
+  { icon: Palette,  title: 'Design professionnel',   desc: 'Une identité visuelle qui inspire confiance.' },
+  { icon: BrainCircuit, title: 'Solutions IA',       desc: 'Chatbots et automatisations intelligents.' },
+  { icon: Rocket,   title: 'Support réactif',        desc: 'Une équipe disponible et à votre écoute.' },
+]
 
 export default async function HomePage() {
   const [services, works, stats] = await Promise.all([
@@ -29,126 +52,148 @@ export default async function HomePage() {
     <>
       {/* ─── HERO ──────────────────────────────────────────── */}
       <section
-        className="relative min-h-screen bg-[#0d1117] flex items-center overflow-hidden pt-16"
+        className="relative overflow-hidden bg-gradient-to-b from-[#eef2ff] via-background to-background pb-20 pt-40 lg:pb-28"
         aria-label="Hero"
       >
-        {/* Grille de fond style design inspirant */}
-        <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(59,130,246,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.5) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-          }}
-          aria-hidden="true"
-        />
-
         {/* Halos lumineux */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-          <div className="absolute top-1/4 right-1/4 h-[500px] w-[500px] rounded-full bg-blue-600/15 blur-[120px]" />
-          <div className="absolute bottom-1/4 left-1/4 h-[400px] w-[400px] rounded-full bg-blue-900/20 blur-[100px]" />
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div className="absolute -top-32 right-[-10%] h-[480px] w-[480px] rounded-full bg-blue-400/20 blur-[120px]" />
+          <div className="absolute bottom-[-20%] left-[-10%] h-[400px] w-[400px] rounded-full bg-indigo-300/25 blur-[120px]" />
+          <div
+            className="absolute inset-0 opacity-[0.35]"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgb(43 92 246 / 0.05) 1px, transparent 1px), linear-gradient(90deg, rgb(43 92 246 / 0.05) 1px, transparent 1px)',
+              backgroundSize: '56px 56px',
+              maskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%)',
+            }}
+          />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 py-28 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-16 lg:grid-cols-2">
             {/* ── Texte gauche ── */}
-            <div>
-              {/* Badge "Hello There!" */}
-              <div className="mb-6 inline-flex items-center gap-2 rounded-lg border border-blue-500/30 bg-blue-600/10 px-4 py-2 text-sm text-blue-400">
-                <span className="h-2 w-2 rounded-full bg-blue-400 animate-pulse" aria-hidden="true" />
-                Bonjour ! Bienvenue sur NextVenture Tech
+            <div className="animate-fade-in-up">
+              {/* Badge */}
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-blue-600" aria-hidden="true" />
+                Agence digitale — Douala
               </div>
 
-              <h1 className="text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
-                Transformer vos{' '}
-                <span className="relative inline-block">
-                  <span className="text-blue-400">idées</span>
-                  {/* Soulignement décoratif */}
-                  <svg className="absolute -bottom-1 left-0 w-full" height="4" viewBox="0 0 100 4" preserveAspectRatio="none" aria-hidden="true">
-                    <path d="M0,2 Q50,0 100,2" stroke="#3b82f6" strokeWidth="2" fill="none" strokeDasharray="4 2" />
-                  </svg>
-                </span>{' '}
-                en{' '}
-                <span className="bg-gradient-to-r from-blue-400 via-blue-300 to-blue-500 bg-clip-text text-transparent">
+              <h1 className="text-5xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-6xl lg:text-[4.25rem]">
+                Transformer vos idées en{' '}
+                <span className="relative inline-block bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
                   réalité
+                  <svg
+                    className="absolute -bottom-2 left-0 w-full"
+                    height="8"
+                    viewBox="0 0 120 8"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2 6 Q 60 -2 118 5"
+                      stroke="#2b5cf6"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      fill="none"
+                      opacity="0.35"
+                    />
+                  </svg>
                 </span>
+                .
               </h1>
 
-              <p className="mt-6 text-lg leading-relaxed text-slate-400 max-w-lg">
-                Agence digitale à Douala — nous concevons des sites web, des identités visuelles
-                et des solutions IA qui propulsent votre activité.
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted">
+                Nous concevons des sites web, des identités visuelles et des solutions IA
+                qui propulsent votre activité. Stratégie, design, technologie — un seul partenaire.
               </p>
-
-              <ul className="mt-6 grid grid-cols-2 gap-2" aria-label="Points forts">
-                {[
-                  'Sites web sur mesure',
-                  'Design professionnel',
-                  'Solutions IA',
-                  'Support réactif',
-                ].map((p) => (
-                  <li key={p} className="flex items-center gap-2 text-sm text-slate-400">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-blue-500" aria-hidden="true" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/reserver"
-                  className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-500 transition-all"
+                  className="group inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"
                 >
-                  Réserver un Appel Gratuit
+                  Réserver un appel gratuit
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/realisations"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm"
+                  className="group inline-flex items-center gap-2.5 rounded-full border border-border bg-white px-7 py-3.5 text-sm font-bold text-ink shadow-soft transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-card"
                 >
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600/10">
+                    <Play className="h-3 w-3 fill-blue-600 text-blue-600" aria-hidden="true" />
+                  </span>
                   Voir nos projets
-                  <ChevronRight className="h-4 w-4 opacity-60" aria-hidden="true" />
                 </Link>
               </div>
-            </div>
 
-            {/* ── Visuel droite — cartes flottantes ── */}
-            <div className="hidden lg:block relative">
-              {/* Carte principale */}
-              <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6">
-                {/* Badge UX/UI design flottant */}
-                <div className="absolute -top-3 right-8 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
-                  Digital Agency
-                </div>
-
-                <p className="mb-4 text-xs font-medium uppercase tracking-widest text-blue-400">Nos expertises</p>
-                <div className="flex flex-col gap-2.5">
-                  {[
-                    { icon: '🌐', label: 'Web Design & Développement' },
-                    { icon: '🎨', label: 'Graphic Design & Branding' },
-                    { icon: '🤖', label: 'Intelligence Artificielle' },
-                    { icon: '🎬', label: 'Montage Vidéo' },
-                    { icon: '✨', label: 'Motion Design' },
-                  ].map(({ icon, label }) => (
-                    <div
-                      key={label}
-                      className="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-2.5 hover:bg-white/10 transition-colors"
-                    >
-                      <span className="text-lg" aria-hidden="true">{icon}</span>
-                      <span className="text-sm font-medium text-slate-200">{label}</span>
+              {/* Stats — style NovaWave avec séparateurs */}
+              {stats.length > 0 && (
+                <dl className="mt-14 grid grid-cols-2 gap-y-8 sm:grid-cols-4">
+                  {stats.slice(0, 4).map((stat, i) => (
+                    <div key={stat.id} className={i > 0 ? 'sm:border-l sm:border-border sm:pl-6' : ''}>
+                      <dd className="text-3xl font-extrabold tabular-nums tracking-tight text-ink sm:text-4xl">
+                        {stat.value}
+                      </dd>
+                      <dt className="mt-1 text-xs font-medium text-muted">{stat.label}</dt>
                     </div>
                   ))}
+                </dl>
+              )}
+            </div>
+
+            {/* ── Visuel droite — cartes superposées ── */}
+            <div className="relative hidden lg:block" aria-hidden="true">
+              {/* Couches arrière */}
+              <div className="absolute -right-8 -top-10 h-full w-full rotate-6 rounded-[2.5rem] bg-gradient-to-br from-blue-200 to-indigo-200" />
+              <div className="absolute -left-5 -top-4 h-full w-full -rotate-3 rounded-[2.5rem] bg-gradient-to-br from-indigo-100 to-white shadow-soft" />
+
+              {/* Carte principale */}
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 p-9 shadow-glow">
+                <div
+                  className="absolute inset-0 opacity-[0.14]"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)',
+                    backgroundSize: '26px 26px',
+                  }}
+                />
+                <p className="relative max-w-[15rem] text-3xl font-extrabold leading-tight text-white">
+                  Des expériences digitales qui{' '}
+                  <span className="text-blue-200">convertissent</span>.
+                </p>
+                <div className="absolute right-8 top-8 rounded-full border border-white/25 bg-white/15 px-4 py-1.5 text-xs font-semibold text-white backdrop-blur">
+                  Agence digitale
+                </div>
+                <div className="absolute bottom-8 left-8 flex h-14 w-14 items-center justify-center rounded-full border border-white/30 bg-white/15 backdrop-blur transition-transform hover:scale-105">
+                  <Play className="ml-0.5 h-5 w-5 fill-white text-white" />
                 </div>
               </div>
 
-              {/* Stats flottantes */}
-              <div className="absolute -bottom-5 -left-5 rounded-xl border border-white/10 bg-[#0d1117]/90 backdrop-blur-sm px-5 py-3 shadow-xl">
-                <p className="text-2xl font-extrabold text-white">50+</p>
-                <p className="text-xs text-slate-400">Projets réalisés</p>
+              {/* Carte flottante sombre — 01 Stratégie */}
+              <div className="absolute -bottom-10 -left-12 w-60 rounded-3xl bg-ink p-5 shadow-2xl">
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl font-extrabold text-white">01</span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600/25 text-blue-300">
+                    <Compass className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                </div>
+                <p className="mt-3 text-sm font-bold text-white">Stratégie</p>
+                <p className="mt-1 text-xs leading-relaxed text-slate-400">
+                  Recherche, analyse d&apos;audience et insights.
+                </p>
               </div>
-              <div className="absolute -top-5 -right-5 rounded-xl border border-white/10 bg-blue-600/20 backdrop-blur-sm px-5 py-3 shadow-xl">
-                <p className="text-2xl font-extrabold text-blue-300">4.8★</p>
-                <p className="text-xs text-slate-400">Note moyenne</p>
+
+              {/* Badge flottant clair */}
+              <div className="absolute -right-4 bottom-20 flex items-center gap-3 rounded-3xl border border-border bg-white/95 p-4 shadow-soft backdrop-blur">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600">
+                  <Rocket className="h-5 w-5 text-white" />
+                </span>
+                <div>
+                  <p className="text-sm font-extrabold text-ink">{stats[0]?.value ?? '30+'}</p>
+                  <p className="text-xs text-muted">{stats[0]?.label ?? 'Projets livrés'}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -158,70 +203,57 @@ export default async function HomePage() {
       {/* ─── MARQUEE ───────────────────────────────────────── */}
       <ServicesMarquee />
 
-      {/* ─── STATS ─────────────────────────────────────────── */}
-      {stats.length > 0 && (
-        <section className="bg-[#f7f7f3] py-14 border-b border-slate-200" aria-label="Statistiques">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-              {stats.map((stat) => (
-                <div key={stat.id} className="flex flex-col items-center text-center">
-                  <span className="text-4xl font-extrabold text-blue-600 tabular-nums">{stat.value}</span>
-                  <span className="mt-1 text-sm font-medium text-slate-500">{stat.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ─── SERVICES — cartes sombres style inspirant ─────── */}
+      {/* ─── SERVICES ──────────────────────────────────────── */}
       {services.length > 0 && (
-        <section className="py-20 bg-[#f7f7f3]" aria-labelledby="services-heading">
+        <section className="py-24" aria-labelledby="services-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 flex items-end justify-between">
+            <div className="reveal mb-14 flex flex-wrap items-end justify-between gap-6">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 mb-2">
-                  — Service
+                <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
+                  — Services
                 </p>
-                <h2 id="services-heading" className="text-3xl font-extrabold text-slate-900">
-                  Ce que nous offrons
+                <h2 id="services-heading" className="text-4xl font-extrabold tracking-tight text-ink">
+                  Ce que nous <span className="text-blue-600">offrons</span>
                 </h2>
               </div>
               <Link
                 href="/services"
-                className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+                className="group hidden items-center gap-1.5 text-sm font-bold text-blue-600 transition-colors hover:text-blue-700 sm:inline-flex"
               >
-                Voir tous les services <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                Voir tous les services
+                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>
 
-            {/* Grille de cartes sombres */}
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((svc) => {
-                const icon = ICON_MAP[svc.icon ?? ''] ?? '⚡'
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {services.map((svc, i) => {
+                const Icon = ICON_MAP[svc.icon ?? ''] ?? Sparkles
+                const gradient = TILE_GRADIENTS[i % TILE_GRADIENTS.length]
                 return (
-                  <div
+                  <article
                     key={svc.id}
-                    className="group flex flex-col rounded-2xl bg-[#0d1117] border border-white/10 p-6 hover:border-blue-500/50 transition-all duration-300"
+                    className="reveal group flex flex-col rounded-3xl border border-border bg-surface p-7 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card"
                   >
-                    {/* Icône */}
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600/15 text-2xl">
-                      {icon}
-                    </div>
-                    <h3 className="mb-2 text-base font-bold text-white">{svc.title}</h3>
+                    <span
+                      className={`mb-5 flex h-13 w-13 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} p-3.5 text-white shadow-soft`}
+                    >
+                      <Icon className="h-6 w-6" aria-hidden="true" />
+                    </span>
+                    <h3 className="text-lg font-extrabold tracking-tight text-ink">{svc.title}</h3>
                     {svc.description && (
-                      <p className="mb-5 text-sm leading-relaxed text-slate-400 flex-1 line-clamp-3">
+                      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted line-clamp-3">
                         {svc.description}
                       </p>
                     )}
                     <Link
                       href={`/services#${svc.slug}`}
-                      className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-400 group-hover:text-blue-300 transition-colors"
+                      className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 transition-colors group-hover:text-blue-700"
+                      aria-label={`En savoir plus sur ${svc.title}`}
                     >
-                      Read More
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                      En savoir plus
+                      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
                     </Link>
-                  </div>
+                  </article>
                 )
               })}
             </div>
@@ -229,56 +261,96 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ─── ABOUT / STATS inline ──────────────────────────── */}
-      <section className="bg-[#0d1117] py-20" aria-labelledby="about-heading">
+      {/* ─── ABOUT ─────────────────────────────────────────── */}
+      <section className="bg-surface py-24" aria-labelledby="about-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            {/* Photo / visuel gauche */}
-            <div className="relative flex justify-center">
-              {/* Cercle décoratif */}
-              <div className="relative h-72 w-72 rounded-full bg-blue-600/20 flex items-center justify-center">
-                <div className="h-56 w-56 rounded-full bg-blue-600/30 flex items-center justify-center">
-                  <span className="text-7xl" aria-hidden="true">🚀</span>
-                </div>
-              </div>
-              {/* Badge flottant */}
-              <div className="absolute bottom-4 right-0 rounded-xl border border-white/10 bg-[#0d1117]/90 px-4 py-2 text-center">
-                <p className="text-lg font-bold text-white">30+</p>
-                <p className="text-xs text-slate-400">Clients satisfaits</p>
-              </div>
-            </div>
-
-            {/* Texte droite */}
-            <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-blue-400">
-                — About us
+          <div className="grid items-center gap-16 lg:grid-cols-2">
+            {/* Texte gauche */}
+            <div className="reveal">
+              <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-background px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
+                — À propos
               </p>
-              <h2 id="about-heading" className="mb-4 text-3xl font-extrabold text-white">
+              <h2 id="about-heading" className="text-4xl font-extrabold tracking-tight text-ink">
                 L&apos;histoire derrière{' '}
-                <span className="text-blue-400">NextVenture Tech</span>
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
+                  NextVenture Tech
+                </span>
               </h2>
-              <p className="mb-8 text-slate-400 leading-relaxed">
+              <p className="mt-5 leading-relaxed text-muted">
                 NextVenture Tech est né d&apos;une mission simple — transformer les idées
-                en solutions digitales impactantes. Aujourd&apos;hui, nous aidons les entreprises
-                à croître grâce au design, à l&apos;innovation et à une approche centrée sur les résultats.
+                en solutions digitales impactantes. Aujourd&apos;hui, nous aidons les
+                entreprises à croître grâce au design, à l&apos;innovation et à une
+                approche centrée sur les résultats.
               </p>
 
-              {/* Stats inline */}
-              <div className="flex flex-wrap gap-8">
-                {stats.slice(0, 3).map((stat) => (
-                  <div key={stat.id}>
-                    <p className="text-3xl font-extrabold text-white">{stat.value}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">{stat.label}</p>
+              {/* Cartes valeurs */}
+              <div className="mt-9 grid gap-4 sm:grid-cols-2">
+                {VALUE_PROPS.map(({ icon: Icon, title, desc }) => (
+                  <div
+                    key={title}
+                    className="flex items-start gap-3.5 rounded-2xl border border-border bg-background p-4 transition-colors hover:border-blue-200"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-soft">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-extrabold text-ink">{title}</p>
+                      <p className="mt-0.5 text-xs leading-relaxed text-muted">{desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
 
               <Link
                 href="/contact"
-                className="mt-8 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-500 transition-colors"
+                className="group mt-9 inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"
               >
-                Nous contacter <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Nous contacter
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
+            </div>
+
+            {/* Visuel droite */}
+            <div className="reveal relative">
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-ink p-10 shadow-soft">
+                <div
+                  className="absolute inset-0 opacity-[0.08]"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(rgba(59,130,246,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.5) 1px, transparent 1px)',
+                    backgroundSize: '40px 40px',
+                  }}
+                  aria-hidden="true"
+                />
+                <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-600/25 blur-[80px]" aria-hidden="true" />
+
+                <div className="relative flex aspect-[5/4] items-center justify-center">
+                  <div className="flex h-44 w-44 items-center justify-center rounded-full bg-blue-600/15 ring-1 ring-white/10">
+                    <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 shadow-glow">
+                      <Rocket className="h-14 w-14 text-white" aria-hidden="true" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mini-stats flottantes issues de la base */}
+              {stats.length > 1 && (
+                <div className="absolute -bottom-6 left-8 flex items-center gap-3 rounded-2xl border border-border bg-white p-4 shadow-card">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600/10 text-blue-600">
+                    <Check className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <p className="text-sm font-extrabold text-ink">{stats[1]?.value}</p>
+                    <p className="text-xs text-muted">{stats[1]?.label}</p>
+                  </div>
+                </div>
+              )}
+              {stats.length > 2 && (
+                <div className="absolute -top-6 right-8 rounded-2xl border border-border bg-white px-5 py-3 text-center shadow-card">
+                  <p className="text-lg font-extrabold text-blue-600">{stats[2]?.value}</p>
+                  <p className="text-xs text-muted">{stats[2]?.label}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -286,28 +358,35 @@ export default async function HomePage() {
 
       {/* ─── RÉALISATIONS ──────────────────────────────────── */}
       {works.length > 0 && (
-        <section className="py-20 bg-[#f7f7f3]" aria-labelledby="works-heading">
+        <section className="py-24" aria-labelledby="works-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 flex items-end justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 mb-2">
-                  — Nos Derniers Projets
-                </p>
-                <h2 id="works-heading" className="text-3xl font-extrabold text-slate-900">
-                  Explorez notre <span className="text-blue-600">Showcase</span>
-                </h2>
-              </div>
-              <Link
-                href="/realisations"
-                className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
-              >
-                Voir tous les projets <ChevronRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
+            <div className="reveal mb-14 text-center">
+              <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
+                — Nos derniers projets
+              </p>
+              <h2 id="works-heading" className="mx-auto max-w-2xl text-4xl font-extrabold tracking-tight text-ink">
+                Explorez notre showcase de{' '}
+                <span className="text-blue-600">projets réalisés</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-muted">
+                Des projets concrets pour des clients réels. Chaque réalisation raconte une histoire.
+              </p>
             </div>
-            <div className="grid gap-6 sm:grid-cols-2">
+
+            <div className="reveal grid gap-6 sm:grid-cols-2">
               {works.slice(0, 4).map((work) => (
                 <WorkCard key={work.id} work={work} />
               ))}
+            </div>
+
+            <div className="reveal mt-12 text-center">
+              <Link
+                href="/realisations"
+                className="group inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"
+              >
+                Voir toutes les réalisations
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+              </Link>
             </div>
           </div>
         </section>
@@ -317,40 +396,46 @@ export default async function HomePage() {
       <FaqSection />
 
       {/* ─── CTA FINAL ─────────────────────────────────────── */}
-      <section className="bg-[#0d1117] py-24 relative overflow-hidden" aria-label="Appel à l'action">
-        <div
-          className="absolute inset-0 opacity-[0.05]"
-          style={{
-            backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)',
-            backgroundSize: '32px 32px',
-          }}
-          aria-hidden="true"
-        />
-        <div className="relative mx-auto max-w-3xl px-4 text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-blue-400">
-            — Démarrez maintenant
-          </p>
-          <h2 className="text-4xl font-extrabold text-white sm:text-5xl">
-            Prêt pour votre{' '}
-            <span className="text-blue-400">prochain projet</span> ?
-          </h2>
-          <p className="mt-5 text-lg text-slate-400">
-            Réservez un appel gratuit de 30 minutes. Pas d&apos;engagement, juste une conversation.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/reserver"
-              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-8 py-4 text-base font-semibold text-white hover:bg-blue-500 transition-colors"
-            >
-              Réserver un Appel Gratuit
-              <ArrowRight className="h-5 w-5" aria-hidden="true" />
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-8 py-4 text-base font-semibold text-white hover:bg-white/10 transition-colors backdrop-blur-sm"
-            >
-              Nous écrire
-            </Link>
+      <section className="pb-28 pt-4" aria-label="Appel à l'action">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="reveal relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-6 py-20 text-center shadow-glow sm:px-12">
+            <div
+              className="absolute inset-0 opacity-[0.12]"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)',
+                backgroundSize: '28px 28px',
+              }}
+              aria-hidden="true"
+            />
+            <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-[80px]" aria-hidden="true" />
+            <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-indigo-400/20 blur-[80px]" aria-hidden="true" />
+
+            <div className="relative mx-auto max-w-2xl">
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-100 backdrop-blur">
+                — Démarrez maintenant
+              </p>
+              <h2 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+                Prêt pour votre <span className="text-blue-200">prochain projet</span> ?
+              </h2>
+              <p className="mt-5 text-lg text-blue-100">
+                Réservez un appel gratuit de 30 minutes. Pas d&apos;engagement, juste une conversation.
+              </p>
+              <div className="mt-9 flex flex-wrap justify-center gap-3">
+                <Link
+                  href="/reserver"
+                  className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50"
+                >
+                  Réserver un appel gratuit
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 text-sm font-bold text-white transition-colors hover:bg-white/10"
+                >
+                  Nous écrire
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

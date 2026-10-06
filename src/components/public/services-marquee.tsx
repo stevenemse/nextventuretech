@@ -1,6 +1,6 @@
 'use client'
 
-import { Star } from 'lucide-react'
+import { Asterisk } from 'lucide-react'
 
 const ITEMS = [
   'Web Design', 'Graphic Design', 'Intelligence Artificielle',
@@ -13,11 +13,11 @@ export function ServicesMarquee() {
   const repeated = [...ITEMS, ...ITEMS, ...ITEMS]
 
   return (
-    <div className="overflow-hidden bg-blue-600 py-3" aria-hidden="true">
+    <div className="overflow-hidden bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 py-4" aria-hidden="true">
       <div className="flex animate-[marquee_30s_linear_infinite] whitespace-nowrap">
         {repeated.map((item, i) => (
-          <span key={i} className="flex items-center gap-3 px-6 text-sm font-medium text-white">
-            <Star className="h-3 w-3 fill-white" aria-hidden="true" />
+          <span key={i} className="flex items-center gap-4 px-7 text-sm font-extrabold uppercase tracking-widest text-white">
+            <Asterisk className="h-5 w-5 text-blue-200" aria-hidden="true" />
             {item}
           </span>
         ))}

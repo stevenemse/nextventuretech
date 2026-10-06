@@ -35,39 +35,62 @@ export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0)
 
   return (
-    <section className="py-20 bg-[#f7f7f3]" aria-labelledby="faq-heading">
+    <section className="bg-surface py-24" aria-labelledby="faq-heading">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-blue-600 mb-2"><span aria-hidden="true">&#47;&#47;</span> FAQ</p>
-          <h2 id="faq-heading" className="text-3xl font-extrabold text-slate-900">
+        <div className="reveal mb-14 text-center">
+          <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-background px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
+            — FAQ
+          </p>
+          <h2 id="faq-heading" className="text-4xl font-extrabold tracking-tight text-ink">
             Questions <span className="text-blue-600">fréquentes</span>
           </h2>
+          <p className="mx-auto mt-4 max-w-md text-muted">
+            Tout ce que vous devez savoir avant de démarrer votre projet avec nous.
+          </p>
         </div>
 
-        <div className="flex flex-col gap-3">
-          {FAQ_ITEMS.map((item, i) => (
-            <div
-              key={i}
-              className="rounded-xl border border-slate-200 bg-white overflow-hidden"
-            >
-              <button
-                className="flex w-full items-center justify-between px-6 py-4 text-left"
-                onClick={() => setOpen(open === i ? null : i)}
-                aria-expanded={open === i}
+        <div className="reveal flex flex-col gap-3.5">
+          {FAQ_ITEMS.map((item, i) => {
+            const isOpen = open === i
+            return (
+              <div
+                key={i}
+                className={cn(
+                  'rounded-3xl border bg-white transition-all duration-300',
+                  isOpen ? 'border-blue-200 shadow-soft' : 'border-border hover:border-blue-200/70',
+                )}
               >
-                <span className="font-medium text-slate-900 pr-4">{item.q}</span>
-                <ChevronDown
-                  className={cn('h-5 w-5 shrink-0 text-blue-600 transition-transform duration-200', open === i && 'rotate-180')}
-                  aria-hidden="true"
-                />
-              </button>
-              {open === i && (
-                <div className="px-6 pb-5">
-                  <p className="text-sm text-slate-600 leading-relaxed">{item.a}</p>
+                <button
+                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  aria-expanded={isOpen}
+                >
+                  <span className="font-bold text-ink">{item.q}</span>
+                  <span
+                    className={cn(
+                      'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors duration-200',
+                      isOpen ? 'bg-blue-600 text-white' : 'bg-blue-600/10 text-blue-600',
+                    )}
+                  >
+                    <ChevronDown
+                      className={cn('h-4 w-4 transition-transform duration-300', isOpen && 'rotate-180')}
+                      aria-hidden="true"
+                    />
+                  </span>
+                </button>
+                <div
+                  className={cn(
+                    'grid transition-all duration-300 ease-in-out',
+                    isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0',
+                  )}
+                >
+                  <div className="overflow-hidden">
+                    <p className="px-6 pb-6 text-sm leading-relaxed text-muted">{item.a}</p>
+                  </div>
                 </div>
-              )}
-            </div>
-          ))}
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>

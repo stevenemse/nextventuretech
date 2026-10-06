@@ -24,56 +24,92 @@ export default async function ReserverPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-[#0a0f1e] pt-32 pb-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-blue-400 mb-3"><span aria-hidden="true">&#47;&#47;</span> Réservation</p>
-          <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
-            Réservez un appel <span className="text-blue-400">gratuit</span>
+      {/* Hero clair */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#eef2ff] to-background pb-16 pt-40">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgb(43 92 246 / 0.05) 1px, transparent 1px), linear-gradient(90deg, rgb(43 92 246 / 0.05) 1px, transparent 1px)',
+            backgroundSize: '56px 56px',
+            maskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%)',
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
+            — Réservation
+          </p>
+          <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+            Réservez un appel <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">gratuit</span>
           </h1>
-          <p className="mt-4 text-lg text-slate-400 max-w-xl mx-auto">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
             30 minutes pour discuter de votre projet et recevoir nos premiers conseils.
           </p>
         </div>
       </section>
 
       {/* Corps */}
-      <section className="py-20 bg-white">
+      <section className="pb-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-3">
+          <div className="reveal grid gap-10 lg:grid-cols-5">
             {/* Avantages */}
-            <div>
-              <h2 className="text-xl font-bold text-slate-900 mb-6">Ce que vous obtenez</h2>
-              <ul className="flex flex-col gap-4 mb-8">
+            <div className="lg:col-span-2">
+              <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-ink">
+                Ce que vous obtenez
+              </h2>
+              <ul className="mb-8 flex flex-col gap-3">
                 {BENEFITS.map((b) => (
-                  <li key={b} className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-blue-600 mt-0.5" aria-hidden="true" />
-                    <span className="text-sm text-slate-700">{b}</span>
+                  <li
+                    key={b}
+                    className="flex items-start gap-3 rounded-2xl border border-border bg-surface p-4 shadow-soft"
+                  >
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-white" aria-hidden="true" />
+                    </span>
+                    <span className="text-sm font-semibold text-slate-700">{b}</span>
                   </li>
                 ))}
               </ul>
 
-              <div className="rounded-xl bg-blue-50 p-5">
-                <p className="text-sm font-semibold text-blue-900 mb-1">Disponibles immédiatement ?</p>
-                <p className="text-xs text-blue-700 mb-3">Contactez-nous directement sur WhatsApp pour une réponse instantanée.</p>
-                <a
-                  href={`https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Bonjour, je souhaite réserver un appel.')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg bg-green-500 px-4 py-2 text-xs font-semibold text-white hover:bg-green-600 transition-colors"
-                >
-                  WhatsApp →
-                </a>
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 shadow-glow">
+                <div
+                  className="absolute inset-0 opacity-[0.14]"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)',
+                    backgroundSize: '24px 24px',
+                  }}
+                  aria-hidden="true"
+                />
+                <div className="relative">
+                  <p className="text-base font-extrabold text-white">Disponibles immédiatement ?</p>
+                  <p className="mt-1 text-sm leading-relaxed text-blue-100">
+                    Contactez-nous directement sur WhatsApp pour une réponse instantanée.
+                  </p>
+                  <a
+                    href={`https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Bonjour, je souhaite réserver un appel.')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50"
+                  >
+                    Ouvrir WhatsApp →
+                  </a>
+                </div>
               </div>
             </div>
 
             {/* Widget Calendly ou fallback */}
-            <div className="lg:col-span-2">
-              {calendlyUrl ? (
-                <CalendlyWidget url={calendlyUrl} />
-              ) : (
-                <CalendlyFallback whatsapp={whatsapp} phone={phone} />
-              )}
+            <div className="lg:col-span-3">
+              <div className="overflow-hidden rounded-[2rem] border border-border bg-surface p-2 shadow-soft sm:p-4">
+                {calendlyUrl ? (
+                  <CalendlyWidget url={calendlyUrl} />
+                ) : (
+                  <div className="p-4 sm:p-8">
+                    <CalendlyFallback whatsapp={whatsapp} phone={phone} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

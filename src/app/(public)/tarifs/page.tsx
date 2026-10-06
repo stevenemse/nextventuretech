@@ -24,36 +24,55 @@ export default async function TarifsPage() {
 
   return (
     <>
-      <section className="bg-[#0a0f1e] pt-32 pb-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-blue-400 mb-3"><span aria-hidden="true">&#47;&#47;</span> Tarification</p>
-          <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
-            Prix <span className="text-blue-400">transparents</span>
+      {/* Hero clair */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#eef2ff] to-background pb-16 pt-40">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgb(43 92 246 / 0.05) 1px, transparent 1px), linear-gradient(90deg, rgb(43 92 246 / 0.05) 1px, transparent 1px)',
+            backgroundSize: '56px 56px',
+            maskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%)',
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
+            — Tarification
+          </p>
+          <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+            Prix <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">transparents</span>
           </h1>
-          <p className="mt-4 text-lg text-slate-400 max-w-xl mx-auto">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
             Des plans clairs pour chaque budget. Pas de frais cachés, pas de surprises.
           </p>
         </div>
       </section>
 
-      <section className="py-20 bg-white">
+      {/* Plans par service */}
+      <section className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {filtered.length === 0 ? (
-            <p className="text-center text-slate-500 py-20">Les tarifs arrivent bientôt.</p>
+            <div className="rounded-3xl border border-border bg-surface py-20 text-center shadow-soft">
+              <p className="text-lg font-bold text-ink">Les tarifs arrivent bientôt.</p>
+            </div>
           ) : (
-            <div className="flex flex-col gap-20">
+            <div className="flex flex-col gap-24">
               {filtered.map(({ service, plans }) => (
-                <div key={service.id} id={service.slug}>
+                <div key={service.id} id={service.slug} className="reveal">
                   <div className="mb-10 text-center">
-                    <p className="text-sm font-semibold uppercase tracking-widest text-blue-600 mb-2">
+                    <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                       {service.title}
                     </p>
-                    <h2 className="text-2xl font-bold text-slate-900">Choisissez votre formule</h2>
+                    <h2 className="text-3xl font-extrabold tracking-tight text-ink">
+                      Choisissez votre formule
+                    </h2>
                   </div>
                   <div className={`grid gap-8 ${
-                    plans.length === 1 ? 'max-w-sm mx-auto' :
-                    plans.length === 2 ? 'sm:grid-cols-2 max-w-2xl mx-auto' :
-                    'sm:grid-cols-2 lg:grid-cols-3'
+                    plans.length === 1 ? 'mx-auto max-w-sm' :
+                    plans.length === 2 ? 'mx-auto max-w-3xl sm:grid-cols-2' :
+                    'lg:grid-cols-3'
                   }`}>
                     {plans.map((plan) => (
                       <PricingCard key={plan.id} plan={plan} />
@@ -66,17 +85,41 @@ export default async function TarifsPage() {
         </div>
       </section>
 
-      <section className="bg-slate-50 py-16">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Besoin d&apos;un devis personnalisé ?</h2>
-          <p className="text-slate-500 mb-6">Décrivez votre projet et nous vous répondrons sous 24h.</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/contact" className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">
-              Demander un devis <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <Link href="/reserver" className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">
-              Réserver un appel
-            </Link>
+      {/* CTA */}
+      <section className="pb-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="reveal relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 text-center shadow-glow">
+            <div
+              className="absolute inset-0 opacity-[0.12]"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)',
+                backgroundSize: '28px 28px',
+              }}
+              aria-hidden="true"
+            />
+            <div className="relative">
+              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                Besoin d&apos;un <span className="text-blue-200">devis personnalisé</span> ?
+              </h2>
+              <p className="mx-auto mt-3 max-w-md text-blue-100">
+                Décrivez votre projet et nous vous répondrons sous 24h.
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
+                <Link
+                  href="/contact"
+                  className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50"
+                >
+                  Demander un devis
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/reserver"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-3.5 text-sm font-bold text-white transition-colors hover:bg-white/10"
+                >
+                  Réserver un appel
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
