@@ -3,10 +3,13 @@ import Link from 'next/link'
 import { ArrowRight, Check, Globe, Palette, BrainCircuit, Clapperboard, Sparkles } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { getPublishedServices } from '@/services/services.service'
+import { JsonLd } from '@/components/seo/json-ld'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: 'Services',
   description: 'Découvrez nos services : Web Design, Graphic Design, Intelligence Artificielle, Montage Vidéo et Motion Design.',
+  alternates: { canonical: '/services' },
 }
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -28,8 +31,35 @@ const VISUAL_GRADIENTS = [
 export default async function ServicesPage() {
   const services = await getPublishedServices()
 
+  // ── SEO : données structurées Service ──
+  const base = siteConfig.url.replace(/\/$/, '')
+  const servicesLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: services.map((svc, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Service',
+        name: svc.title,
+        ...(svc.description ? { description: svc.description } : {}),
+        url: `${base}/services#${svc.slug}`,
+        provider: {
+          '@type': 'Organization',
+          name: siteConfig.name,
+          url: base,
+        },
+        areaServed: {
+          '@type': 'Place',
+          name: siteConfig.location,
+        },
+      },
+    })),
+  }
+
   return (
     <>
+      <JsonLd data={servicesLd} />
       {/* Hero clair */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[#eef2ff] to-background pb-16 pt-40">
         <div

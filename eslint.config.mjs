@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Scripts Node one-shot (build d'assets)
+    "scripts/**",
   ]),
 ]);
 

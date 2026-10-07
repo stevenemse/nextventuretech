@@ -10,6 +10,7 @@ import { getActiveStats } from '@/services/settings.service'
 import { ServicesMarquee } from '@/components/public/services-marquee'
 import { WorkCard } from '@/components/public/work-card'
 import { FaqSection } from '@/components/public/faq-section'
+import { JsonLd } from '@/components/seo/json-ld'
 import { siteConfig } from '@/config/site'
 import type { Metadata } from 'next'
 
@@ -48,8 +49,32 @@ export default async function HomePage() {
     getActiveStats(),
   ])
 
+  // ── SEO : données structurées Organization ──
+  const organizationLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: `${siteConfig.url.replace(/\/$/, '')}/logo/nextventure-logo-light.svg`,
+    description: siteConfig.description,
+    email: siteConfig.email,
+    telephone: siteConfig.phone,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Douala',
+      addressCountry: 'CM',
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: siteConfig.phone,
+      contactType: 'customer service',
+      availableLanguage: ['fr', 'en'],
+    },
+  }
+
   return (
     <>
+      <JsonLd data={organizationLd} />
       {/* ─── HERO ──────────────────────────────────────────── */}
       <section
         className="relative overflow-hidden bg-gradient-to-b from-[#eef2ff] via-background to-background pb-20 pt-40 lg:pb-28"

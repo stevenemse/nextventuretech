@@ -3,17 +3,42 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { getPublishedWorks } from '@/services/works.service'
 import { WorkCard } from '@/components/public/work-card'
+import { JsonLd } from '@/components/seo/json-ld'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: 'Réalisations',
   description: 'Découvrez nos projets réalisés pour nos clients à travers le monde.',
+  alternates: { canonical: '/realisations' },
 }
 
 export default async function RealisationsPage() {
   const works = await getPublishedWorks()
 
+  // ── SEO : données structurées ItemList des réalisations ──
+  const base = siteConfig.url.replace(/\/$/, '')
+  const worksLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Réalisations NextVenture Tech',
+    itemListElement: works.map((work, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'CreativeWork',
+        name: work.title,
+        ...(work.description ? { description: work.description } : {}),
+        ...(work.image_url ? { image: work.image_url } : {}),
+        ...(work.partner ? { creator: { '@type': 'Organization', name: work.partner } } : {}),
+        ...(work.category ? { genre: work.category } : {}),
+        url: `${base}/realisations`,
+      },
+    })),
+  }
+
   return (
     <>
+      <JsonLd data={worksLd} />
       {/* Hero clair */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[#eef2ff] to-background pb-16 pt-40">
         <div

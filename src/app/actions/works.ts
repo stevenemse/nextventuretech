@@ -6,10 +6,12 @@ import { requireAdmin } from '@/lib/auth/guards'
 import { workSchema } from '@/lib/validations/work'
 import { slugify } from '@/lib/utils/slugify'
 import {
+  getWorkById,
   createWork,
   updateWork,
   deleteWork,
 } from '@/services/works.service'
+import { deleteImage } from '@/services/storage.service'
 import type { ActionResult } from '@/types/actions'
 import type { Work } from '@/types/database'
 
@@ -75,6 +77,8 @@ export async function updateWorkAction(
     return { status: 'error', message: 'Non autorisé.' }
   }
 
+  const previousImageUrl = String(formData.get('previous_image_url') ?? '')
+
   const raw = {
     title: formData.get('title'),
     slug: formData.get('slug'),
@@ -100,6 +104,18 @@ export async function updateWorkAction(
 
   try {
     const work = await updateWork(id, parsed.data)
+
+    // L'image a été remplacée dans le formulaire → supprimer l'ancienne du Storage
+    if (
+      previousImageUrl &&
+      previousImageUrl !== parsed.data.image_url &&
+      previousImageUrl.includes('/storage/v1/object/public/images/')
+    ) {
+      await deleteImage(previousImageUrl).catch((err) =>
+        console.warn('[updateWorkAction] deleteImage:', err),
+      )
+    }
+
     revalidatePath('/admin/realisations')
     revalidatePath('/realisations')
     revalidatePath(`/admin/realisations/${id}`)
@@ -121,6 +137,14 @@ export async function deleteWorkAction(id: string): Promise<ActionResult> {
   }
 
   try {
+    // Récupérer l'URL de l'image avant suppression pour nettoyer le Storage
+    const work = await getWorkById(id)
+    if (work?.image_url?.includes('/storage/v1/object/public/images/')) {
+      await deleteImage(work.image_url).catch((err) =>
+        console.warn('[deleteWorkAction] deleteImage:', err),
+      )
+    }
+
     await deleteWork(id)
     revalidatePath('/admin/realisations')
     revalidatePath('/realisations')

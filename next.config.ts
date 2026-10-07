@@ -20,7 +20,7 @@ const SECURITY_HEADERS = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com",
       "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
-      "img-src 'self' data: blob: https://woofxjcanpgnxjuqtrna.supabase.co https://*.calendly.com",
+      "img-src 'self' data: blob: https://woofxjcanpgnxjuqtrna.supabase.co https://i.pinimg.com https://*.calendly.com",
       "frame-src https://calendly.com",
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.calendly.com",
       "font-src 'self' data:",
@@ -36,6 +36,14 @@ const nextConfig: NextConfig = {
         hostname: 'woofxjcanpgnxjuqtrna.supabase.co',
         port: '',
         pathname: '/storage/v1/object/public/**',
+      },
+      /* Images hébergées ailleurs (ex: réalisation ETS City Pax avec une photo Pinterest).
+         Preferé le Storage Supabase pour les nouveaux contenus. */
+      {
+        protocol: 'https',
+        hostname: 'i.pinimg.com',
+        port: '',
+        pathname: '/**',
       },
     ],
   },

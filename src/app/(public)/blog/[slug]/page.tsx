@@ -17,6 +17,8 @@ import {
 } from '@/services/blog.service'
 import type { BlogPost } from '@/types/database'
 import { cn } from '@/lib/utils/cn'
+import { JsonLd } from '@/components/seo/json-ld'
+import { siteConfig } from '@/config/site'
 
 type Params = Promise<{ slug: string }>
 
@@ -37,6 +39,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       publishedTime: post.published_at ?? undefined,
       authors: [post.author],
     },
+    alternates: { canonical: `/blog/${post.slug}` },
   }
 }
 
@@ -191,9 +194,33 @@ export default async function BlogPostPage({ params }: { params: Params }) {
     : { prev: null, next: null }
 
   const minutes = readingTimeMinutes(post.content)
+  const base = siteConfig.url.replace(/\/$/, '')
+
+  // ── SEO : données structurées Article ──
+  const articleLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    ...(post.excerpt ? { description: post.seo_description ?? post.excerpt } : {}),
+    ...(post.cover_image_url ? { image: [post.cover_image_url] } : {}),
+    ...(post.published_at ? { datePublished: post.published_at } : {}),
+    ...(post.updated_at ? { dateModified: post.updated_at } : {}),
+    author: { '@type': 'Person', name: post.author },
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${base}/logo/nextventure-logo-light.svg`,
+      },
+    },
+    mainEntityOfPage: `${base}/blog/${post.slug}`,
+    ...(post.tags.length > 0 ? { keywords: post.tags.join(', ') } : {}),
+  }
 
   return (
     <>
+      <JsonLd data={articleLd} />
       {/* Hero article */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[#eef2ff] to-background pb-12 pt-40">
         <div

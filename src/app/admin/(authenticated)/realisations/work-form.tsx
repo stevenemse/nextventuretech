@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { ImageUpload } from '@/components/admin/image-upload'
 import { slugify } from '@/lib/utils/slugify'
 import { initialActionState } from '@/types/actions'
 import type { Work } from '@/types/database'
@@ -80,9 +81,16 @@ export function WorkForm({ work }: Props) {
         </div>
       </div>
 
+      {/* Image : upload drag & drop + aperçu immédiat (stockée dans Supabase Storage, folder 'works') */}
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="image_url">URL de l&apos;image</Label>
-        <Input id="image_url" name="image_url" type="url" defaultValue={work?.image_url ?? ''} placeholder="https://…" />
+        <ImageUpload
+          folder="works"
+          currentUrl={work?.image_url ?? null}
+          fieldName="image_url"
+          label="Image de la réalisation"
+        />
+        {/* Champ caché pour la suppression de l'ancienne image dans updateWorkAction */}
+        <input type="hidden" name="previous_image_url" value={work?.image_url ?? ''} />
       </div>
 
       <div className="flex flex-col gap-1.5">
