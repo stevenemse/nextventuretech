@@ -1,13 +1,31 @@
 import Link from 'next/link'
-import { Check, Zap } from 'lucide-react'
+import { Check, MessageCircle, Zap } from 'lucide-react'
 import type { PricingPlan } from '@/types/database'
 import { cn } from '@/lib/utils/cn'
+import { siteConfig } from '@/config/site'
 
 interface PricingCardProps {
   plan: PricingPlan
+  /** Titre du service auquel ce plan est rattaché (pour le préremplissage). */
+  serviceTitle?: string
 }
 
-export function PricingCard({ plan }: PricingCardProps) {
+/**
+ * Message WhatsApp prérempli pour ce plan tarifaire.
+ * Forme : "Bonjour, je suis interessé(e) par votre offre X (Y, prix Z)..."
+ */
+export function buildPlanWhatsAppUrl(plan: PricingPlan, serviceTitle?: string): string {
+  const number = siteConfig.whatsapp.replace(/\D/g, '')
+  const price = plan.is_custom_quote
+    ? 'sur devis'
+    : `${plan.price?.toLocaleString('fr-FR')} ${plan.currency}`
+  const servicePart = serviceTitle ? ` pour ${serviceTitle}` : ''
+  const message = `Bonjour NextVenture Tech ! Je suis interessé(e) par votre offre "${plan.name}"${servicePart} (${price}). Pouvez-vous me donner plus de details ?`
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+}
+
+export function PricingCard({ plan, serviceTitle }: PricingCardProps) {
+  const contactHref = `/contact?service=${encodeURIComponent(serviceTitle ?? '')}&plan=${encodeURIComponent(plan.name)}`
   return (
     <div
       className={cn(
@@ -72,10 +90,10 @@ export function PricingCard({ plan }: PricingCardProps) {
         </ul>
       )}
 
-      {/* CTA */}
-      <div className="mt-auto">
+      {/* CTA — suite logique : formulaire contact prérempli ou WhatsApp direct */}
+      <div className="mt-auto flex flex-col gap-2">
         <Link
-          href={plan.is_custom_quote ? '/contact' : '/reserver'}
+          href={contactHref}
           className={cn(
             'flex w-full items-center justify-center rounded-full py-3 text-sm font-bold transition-colors',
             plan.is_popular
@@ -83,8 +101,22 @@ export function PricingCard({ plan }: PricingCardProps) {
               : 'bg-blue-600 text-white hover:bg-blue-700',
           )}
         >
-          {plan.is_custom_quote ? 'Demander un devis' : 'Commencer'}
+          {plan.is_custom_quote ? 'Demander un devis' : 'Commencer avec cette formule'}
         </Link>
+        <a
+          href={buildPlanWhatsAppUrl(plan, serviceTitle)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(
+            'group flex w-full items-center justify-center gap-2 rounded-full border py-3 text-sm font-bold transition-colors',
+            plan.is_popular
+              ? 'border-white/40 text-white hover:bg-white/10'
+              : 'border-border bg-white text-slate-700 hover:border-green-300 hover:text-green-700',
+          )}
+        >
+          <MessageCircle className="h-4 w-4" aria-hidden="true" />
+          Discuter sur WhatsApp
+        </a>
       </div>
     </div>
   )

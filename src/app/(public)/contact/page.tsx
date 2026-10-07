@@ -4,13 +4,18 @@ import { getPublishedServices } from '@/services/services.service'
 import { getSiteSettings } from '@/services/settings.service'
 import { siteConfig } from '@/config/site'
 import { ContactForm } from './contact-form'
+import { Reveal } from '@/components/public/reveal'
 
 export const metadata: Metadata = {
   title: 'Contact',
   description: 'Contactez NextVenture Tech pour discuter de votre projet digital.',
 }
 
-export default async function ContactPage() {
+interface Props {
+  searchParams: Promise<{ service?: string; plan?: string }>
+}
+
+export default async function ContactPage({ searchParams }: Props) {
   const [services, settings] = await Promise.all([
     getPublishedServices(),
     getSiteSettings(),
@@ -27,6 +32,8 @@ export default async function ContactPage() {
       href: `https://wa.me/${whatsapp.replace(/\D/g, '')}` },
     { icon: Clock,  label: 'Horaires', value: 'Lun – Ven, 9h – 18h' },
   ]
+
+  const { service: serviceParam, plan: planParam } = await searchParams
 
   return (
     <>
@@ -59,14 +66,15 @@ export default async function ContactPage() {
       {/* Corps */}
       <section className="pb-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="reveal grid gap-10 lg:grid-cols-5">
+          <Reveal className="grid gap-10 lg:grid-cols-5">
             {/* Infos contact — cartes 2x2 */}
             <div className="lg:col-span-2">
               <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-ink">Nos coordonnées</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 {contactInfo.map(({ icon: Icon, label, value, href }) => (
-                  <div
+                  <Reveal
                     key={label}
+                    delay={150}
                     className="min-w-0 rounded-3xl border border-border bg-surface p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
                   >
                     <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-soft">
@@ -83,21 +91,25 @@ export default async function ContactPage() {
                     ) : (
                       <p className="mt-0.5 text-sm font-bold break-words text-ink [overflow-wrap:anywhere]">{value}</p>
                     )}
-                  </div>
+                  </Reveal>
                 ))}
               </div>
             </div>
 
-            {/* Formulaire */}
+            {/* Formulaire — prérempli si l'utilisateur vient d'un service ou d'un plan tarifaire */}
             <div className="lg:col-span-3">
               <div className="rounded-[2rem] border border-border bg-surface p-6 shadow-soft sm:p-9">
                 <h2 className="mb-7 text-2xl font-extrabold tracking-tight text-ink">
                   Décrivez votre projet
                 </h2>
-                <ContactForm services={services.map((s) => ({ id: s.id, title: s.title }))} />
+                <ContactForm
+                  services={services.map((s) => ({ id: s.id, title: s.title }))}
+                  presetService={serviceParam}
+                  presetPlan={planParam}
+                />
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

@@ -1,9 +1,10 @@
 'use server'
 
 import { headers } from 'next/headers'
-import { contactSchema } from '@/lib/validations/contact'
+import { contactSchema, honeypotSchema } from '@/lib/validations/contact'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { createWorkRequest } from '@/services/requests.service'
+import { getPublishedServices } from '@/services/services.service'
 import { buildWhatsAppUrl } from '@/lib/utils/whatsapp'
 import type { ActionResult } from '@/types/actions'
 
@@ -23,6 +24,17 @@ export async function submitContactForm(
   _prev: ActionResult<ContactActionData>,
   formData: FormData,
 ): Promise<ActionResult<ContactActionData>> {
+  // ── Honeypot anti-bot ──────────────────────────────────────
+  // Un humain ne peut pas remplir le champ « website » (inaccessible).
+  // Un bot qui le remplit est silencieusement ignoré (pas de fuite d'info).
+  const honeypot = honeypotSchema.safeParse({
+    website: String(formData.get('website') ?? ''),
+  })
+  if (!honeypot.success || honeypot.data.website !== '') {
+    // Réponse factice pour ne pas révéler le piège
+    return { status: 'error', message: 'Veuillez corriger les erreurs du formulaire.' }
+  }
+
   // ── Rate limiting ──────────────────────────────────────────
   const headersList = await headers()
   const ip = getClientIp(headersList)
@@ -85,7 +97,23 @@ export async function submitContactForm(
   }
 
   // ── Succès ─────────────────────────────────────────────────
-  const whatsappUrl = buildWhatsAppUrl(input.name, input.service_id ?? undefined)
+  // Récupérer le titre du service choisi pour le message WhatsApp.
+  // La requête DB a déjà été persistée ; on relit le titre via getPublishedServices.
+  let serviceName: string | undefined
+  if (input.service_id) {
+    try {
+      const services = await getPublishedServices()
+      serviceName = services.find((s) => s.id === input.service_id)?.title
+    } catch {
+      // best-effort — le message WhatsApp reste utile sans le titre
+    }
+  }
+
+  const whatsappUrl = buildWhatsAppUrl({
+    name: input.name,
+    service: serviceName,
+    budget: input.budget ?? undefined,
+  })
 
   return {
     status: 'success',

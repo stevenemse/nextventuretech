@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { contactSchema } from '@/lib/validations/contact'
+import { contactSchema, honeypotSchema } from '@/lib/validations/contact'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { createWorkRequest } from '@/services/requests.service'
+import { getPublishedServices } from '@/services/services.service'
 import { buildWhatsAppUrl } from '@/lib/utils/whatsapp'
 
 /**
@@ -35,6 +36,16 @@ export async function POST(request: NextRequest) {
     body = await request.json()
   } catch {
     return NextResponse.json({ error: 'Corps de requête invalide.' }, { status: 400 })
+  }
+
+  // ── Honeypot anti-bot ──────────────────────────────────────
+  const honeypotRaw = (body as Record<string, unknown>)?.website
+  const honeypot = honeypotSchema.safeParse({
+    website: typeof honeypotRaw === 'string' ? honeypotRaw : '',
+  })
+  if (!honeypot.success || honeypot.data.website !== '') {
+    // Réponse factice pour ne pas révéler le piège
+    return NextResponse.json({ error: 'Données invalides.' }, { status: 422 })
   }
 
   // ── Validation Zod ─────────────────────────────────────────
@@ -71,7 +82,22 @@ export async function POST(request: NextRequest) {
   }
 
   // ── Succès ─────────────────────────────────────────────────
-  const whatsappUrl = buildWhatsAppUrl(input.name, input.service_id ?? undefined)
+  // Récupérer le titre du service pour le message WhatsApp (best-effort).
+  let serviceName: string | undefined
+  if (input.service_id) {
+    try {
+      const services = await getPublishedServices()
+      serviceName = services.find((s) => s.id === input.service_id)?.title
+    } catch {
+      // best-effort
+    }
+  }
+
+  const whatsappUrl = buildWhatsAppUrl({
+    name: input.name,
+    service: serviceName,
+    budget: input.budget ?? undefined,
+  })
 
   return NextResponse.json(
     { success: true, whatsappUrl },

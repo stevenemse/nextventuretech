@@ -102,11 +102,12 @@ body {
 }
 
 /* Reveal au scroll — progressive enhancement (Chrome/Edge/Safari 26+) */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(32px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
 @supports (animation-timeline: view()) {
-  @keyframes revealUp {
-    from { opacity: 0; transform: translateY(32px) scale(0.98); }
-    to   { opacity: 1; transform: none; }
-  }
   .reveal {
     animation: revealUp linear both;
     animation-timeline: view();
@@ -114,9 +115,28 @@ body {
   }
 }
 
+/* Fallback IntersectionObserver — navigateurs sans animation-timeline.
+   .reveal-observer est posé par le composant <Reveal ; il démarre caché
+   puis passe en visible quand .is-visible est ajouté. */
+.reveal-observer {
+  opacity: 0;
+}
+.reveal-observer.is-visible {
+  animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+  opacity: 1;
+}
+/* Sans JS (ou si le composant n'opère pas) : ne jamais laisser invisible */
+.no-js .reveal-observer,
+html:not(.js) .reveal-observer {
+  opacity: 1;
+  animation: none;
+}
+
 /* ─── Respect des préférences utilisateur ─────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .animate-fade-in-up { animation: none; }
   .reveal { animation: none; }
+  .reveal-observer { opacity: 1 !important; animation: none !important; }
 }

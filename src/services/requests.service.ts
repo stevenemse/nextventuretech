@@ -14,27 +14,27 @@ import type {
  * Crée une demande depuis le formulaire contact public.
  * Utilise la clé anon + RLS policy "requests_public_insert".
  * Le statut initial est toujours 'pending' (imposé par la DB).
+ *
+ * ⚠️ Pas de `.select()` après l'insert : PostgREST envoie alors
+ * `Prefer: return=representation`, soit un `INSERT … RETURNING`.
+ * PostgreSQL applique les policies SELECT au RETURNING, et la seule
+ * policy SELECT de work_requests est admin-only → l'insert anon échouait
+ * avec "new row violates row-level security policy" (42501) alors même
+ * que l'insertion sans RETURNING réussit. Le retour n'est utilisé par
+ * aucun appelant.
  */
-export async function createWorkRequest(
-  input: WorkRequestInsert,
-): Promise<WorkRequest> {
+export async function createWorkRequest(input: WorkRequestInsert): Promise<void> {
   const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('work_requests')
-    .insert({
-      ...input,
-      // Normalisation serveur — on ne fait pas confiance au frontend
-      service_id: input.service_id || null,
-      phone: input.phone || null,
-      company: input.company || null,
-      budget: input.budget || null,
-    })
-    .select()
-    .single()
+  const { error } = await supabase.from('work_requests').insert({
+    ...input,
+    // Normalisation serveur — on ne fait pas confiance au frontend
+    service_id: input.service_id || null,
+    phone: input.phone || null,
+    company: input.company || null,
+    budget: input.budget || null,
+  })
 
   if (error) throw new Error(`createWorkRequest: ${error.message}`)
-  if (!data) throw new Error('createWorkRequest: aucune donnée retournée')
-  return data
 }
 
 // ─── Admin ───────────────────────────────────────────────────

@@ -14,9 +14,19 @@ import type { Service } from '@/types/database'
 
 interface Props {
   services: Pick<Service, 'id' | 'title'>[]
+  /** Service préselectionné (venant de /services ou /tarifs ?service=…) */
+  presetService?: string
+  /** Plan tarifaire préselectionné (venant de /tarifs ?plan=…) */
+  presetPlan?: string
 }
 
-export function ContactForm({ services }: Props) {
+/** Message par défaut quand l'utilisateur arrive avec une offre préremplie. */
+function buildPresetMessage(plan?: string): string {
+  if (!plan) return ''
+  return `Bonjour, je suis interessé(e) par votre offre "${plan}". J'aimerais en savoir plus sur les délais et les prochaines étapes.`
+}
+
+export function ContactForm({ services, presetService, presetPlan }: Props) {
   const [state, action, pending] = useActionState<ActionResult<ContactActionData>, FormData>(
     submitContactForm,
     initialActionState,
@@ -53,6 +63,12 @@ export function ContactForm({ services }: Props) {
 
   return (
     <form action={action} className="flex flex-col gap-5">
+      {/* Honeypot anti-bot : champ invisible pour les humains, rempli par les bots */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label htmlFor="website">Site web (ne pas remplir)</label>
+        <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+      </div>
+
       {state.status === 'error' && state.message && (
         <Alert variant="error"><AlertDescription>{state.message}</AlertDescription></Alert>
       )}
@@ -92,15 +108,21 @@ export function ContactForm({ services }: Props) {
           <Label htmlFor="service_id">Service souhaité</Label>
           <select
             id="service_id" name="service_id"
+            defaultValue={
+              // Préselection via ?service=… (titre du service) — on peut aussi passer l'ID directement
+              services.find((s) => s.title === presetService)?.id ?? ''
+            }
             className="h-9 w-full rounded-md border border-slate-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">— Choisir un service —</option>
-            {services.map((s) => <option key={s.id} value={s.id}>{s.title}</option>)}
+            {services.map((s) => (
+              <option key={s.id} value={s.id}>{s.title}</option>
+            ))}
           </select>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="budget">Budget estimé</Label>
-          <Input id="budget" name="budget" placeholder="Ex: 150 000 – 300 000 FCFA" />
+          <Input id="budget" name="budget" placeholder="Ex: 150 000 – 300 000 FCFA" defaultValue={presetPlan ?? ''} />
         </div>
       </div>
 
@@ -110,6 +132,7 @@ export function ContactForm({ services }: Props) {
           id="message" name="message" rows={5}
           placeholder="Décrivez votre projet, vos objectifs, vos délais…"
           required
+          defaultValue={buildPresetMessage(presetPlan)}
           error={state.status === 'error' ? state.fieldErrors?.['message']?.[0] : undefined}
         />
         {state.status === 'error' && state.fieldErrors?.['message']?.[0] && (

@@ -12,10 +12,38 @@ interface RateLimitEntry {
 }
 
 // Store en mémoire (partagé entre les workers dans un même processus)
+// ⚠️ En production serverless (Vercel), chaque instance lambda a son propre
+// store — la limite est indicative. Pour du strict, migrer vers Upstash Redis.
 const store = new Map<string, RateLimitEntry>()
 
 const WINDOW_MS = 15 * 60 * 1000 // 15 minutes
 const MAX_REQUESTS = 5
+
+// Purge périodique des entrées expirées pour éviter une fuite mémoire infinie.
+// Un intervalle global est sûr : le module est réutilisé entre les requêtes.
+const CLEANUP_INTERVAL_MS = 60 * 1000
+let cleanupTimer: ReturnType<typeof setInterval> | null = null
+
+function ensureCleanup() {
+  if (cleanupTimer) return
+  cleanupTimer = setInterval(() => {
+    const now = Date.now()
+    for (const [ip, entry] of store) {
+      if (entry.resetAt < now) store.delete(ip)
+    }
+    // Éviter la croissance non bornée si beaucoup d'IPs distinctes
+    if (store.size > 10_000) {
+      // Conserver les 10 000 entrées les plus récentes
+      const sorted = [...store.entries()].sort((a, b) => b[1].resetAt - a[1].resetAt)
+      store.clear()
+      for (const [ip, entry] of sorted.slice(0, 10_000)) {
+        store.set(ip, entry)
+      }
+    }
+  }, CLEANUP_INTERVAL_MS)
+  // Ne pas empêcher Node de se terminer
+  if (typeof cleanupTimer.unref === 'function') cleanupTimer.unref()
+}
 
 /**
  * Vérifie si une IP a dépassé la limite de taux.
@@ -24,6 +52,7 @@ const MAX_REQUESTS = 5
 export function checkRateLimit(
   ip: string,
 ): { allowed: true } | { allowed: false; retryAfter: number } {
+  ensureCleanup()
   const now = Date.now()
   const entry = store.get(ip)
 

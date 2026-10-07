@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react'
 import { getPublishedServices } from '@/services/services.service'
 import { getPricingPlansByService } from '@/services/pricing.service'
 import { PricingCard } from '@/components/public/pricing-card'
+import { Reveal } from '@/components/public/reveal'
 
 export const metadata: Metadata = {
   title: 'Tarifs',
@@ -60,7 +61,8 @@ export default async function TarifsPage() {
           ) : (
             <div className="flex flex-col gap-24">
               {filtered.map(({ service, plans }) => (
-                <div key={service.id} id={service.slug} className="reveal">
+                <div key={service.id} id={service.slug} className="scroll-mt-28">
+                  <Reveal>
                   <div className="mb-10 text-center">
                     <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                       {service.title}
@@ -74,10 +76,12 @@ export default async function TarifsPage() {
                     plans.length === 2 ? 'mx-auto max-w-3xl sm:grid-cols-2' :
                     'lg:grid-cols-3'
                   }`}>
-                    {plans.map((plan) => (
-                      <PricingCard key={plan.id} plan={plan} />
+                    {plans.map((plan, pi) => (
+                      <Reveal key={plan.id} delay={pi * 120}>
+                        <PricingCard plan={plan} serviceTitle={service.title} />
+                      </Reveal>
                     ))}
-                  </div>
+                  </div>                  </Reveal>
                 </div>
               ))}
             </div>
@@ -88,7 +92,7 @@ export default async function TarifsPage() {
       {/* CTA */}
       <section className="pb-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="reveal relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 text-center shadow-glow">
+          <Reveal className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 text-center shadow-glow">
             <div
               className="absolute inset-0 opacity-[0.12]"
               style={{
@@ -120,7 +124,7 @@ export default async function TarifsPage() {
                 </Link>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

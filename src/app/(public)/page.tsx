@@ -11,6 +11,7 @@ import { ServicesMarquee } from '@/components/public/services-marquee'
 import { WorkCard } from '@/components/public/work-card'
 import { FaqSection } from '@/components/public/faq-section'
 import { JsonLd } from '@/components/seo/json-ld'
+import { Reveal } from '@/components/public/reveal'
 import { siteConfig } from '@/config/site'
 import type { Metadata } from 'next'
 
@@ -232,7 +233,7 @@ export default async function HomePage() {
       {services.length > 0 && (
         <section className="py-24" aria-labelledby="services-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="reveal mb-14 flex flex-wrap items-end justify-between gap-6">
+            <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6">
               <div>
                 <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                   — Services
@@ -248,16 +249,17 @@ export default async function HomePage() {
                 Voir tous les services
                 <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
-            </div>
+            </Reveal>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((svc, i) => {
                 const Icon = ICON_MAP[svc.icon ?? ''] ?? Sparkles
                 const gradient = TILE_GRADIENTS[i % TILE_GRADIENTS.length]
                 return (
-                  <article
+                  <Reveal
                     key={svc.id}
-                    className="reveal group flex flex-col rounded-3xl border border-border bg-surface p-7 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card"
+                    delay={(i % 3) * 100}
+                    className="group flex flex-col rounded-3xl border border-border bg-surface p-7 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card"
                   >
                     <span
                       className={`mb-5 flex h-13 w-13 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} p-3.5 text-white shadow-soft`}
@@ -278,7 +280,7 @@ export default async function HomePage() {
                       En savoir plus
                       <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
                     </Link>
-                  </article>
+                  </Reveal>
                 )
               })}
             </div>
@@ -291,7 +293,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             {/* Texte gauche */}
-            <div className="reveal">
+            <Reveal>
               <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-background px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
                 — À propos
               </p>
@@ -333,10 +335,10 @@ export default async function HomePage() {
                 Nous contacter
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
-            </div>
+            </Reveal>
 
             {/* Visuel droite */}
-            <div className="reveal relative">
+            <Reveal className="relative">
               <div className="relative overflow-hidden rounded-[2.5rem] bg-ink p-10 shadow-soft">
                 <div
                   className="absolute inset-0 opacity-[0.08]"
@@ -376,7 +378,7 @@ export default async function HomePage() {
                   <p className="text-xs text-muted">{stats[2]?.label}</p>
                 </div>
               )}
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -385,7 +387,7 @@ export default async function HomePage() {
       {works.length > 0 && (
         <section className="py-24" aria-labelledby="works-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="reveal mb-14 text-center">
+            <Reveal className="mb-14 text-center">
               <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                 — Nos derniers projets
               </p>
@@ -396,15 +398,17 @@ export default async function HomePage() {
               <p className="mx-auto mt-4 max-w-xl text-muted">
                 Des projets concrets pour des clients réels. Chaque réalisation raconte une histoire.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="reveal grid gap-6 sm:grid-cols-2">
-              {works.slice(0, 4).map((work) => (
-                <WorkCard key={work.id} work={work} />
+            <div className="grid gap-6 sm:grid-cols-2">
+              {works.slice(0, 4).map((work, i) => (
+                <Reveal key={work.id} delay={(i % 2) * 120}>
+                  <WorkCard work={work} />
+                </Reveal>
               ))}
             </div>
 
-            <div className="reveal mt-12 text-center">
+            <Reveal className="mt-12 text-center">
               <Link
                 href="/realisations"
                 className="group inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"
@@ -412,7 +416,7 @@ export default async function HomePage() {
                 Voir toutes les réalisations
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
-            </div>
+            </Reveal>
           </div>
         </section>
       )}
@@ -423,7 +427,7 @@ export default async function HomePage() {
       {/* ─── CTA FINAL ─────────────────────────────────────── */}
       <section className="pb-28 pt-4" aria-label="Appel à l'action">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="reveal relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-6 py-20 text-center shadow-glow sm:px-12">
+          <Reveal className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-6 py-20 text-center shadow-glow sm:px-12">
             <div
               className="absolute inset-0 opacity-[0.12]"
               style={{
@@ -461,7 +465,7 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Check, Globe, Palette, BrainCircuit, Clapperboard, Sparkles } from 'lucide-react'
+import { ArrowRight, Check, MessageCircle, Globe, Palette, BrainCircuit, Clapperboard, Sparkles } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { getPublishedServices } from '@/services/services.service'
 import { JsonLd } from '@/components/seo/json-ld'
+import { Reveal } from '@/components/public/reveal'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
@@ -27,6 +28,16 @@ const VISUAL_GRADIENTS = [
   'from-fuchsia-600 via-pink-700 to-rose-800',
   'from-emerald-500 via-teal-600 to-cyan-700',
 ]
+
+/**
+ * Construit une URL WhatsApp préremplie pour un service précis.
+ * Utilisé pour le parcours direct : clic sur "WhatsApp" → message déjà rédigé.
+ */
+function buildServiceWhatsAppUrl(serviceTitle: string): string {
+  const number = siteConfig.whatsapp.replace(/\D/g, '')
+  const message = `Bonjour NextVenture Tech ! Je suis interessé(e) par votre service "${serviceTitle}". Pouvez-vous me donner plus d'informations (delais, tarifs, etapes) ?`
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+}
 
 export default async function ServicesPage() {
   const services = await getPublishedServices()
@@ -99,9 +110,13 @@ export default async function ServicesPage() {
                 <div
                   key={svc.id}
                   id={svc.slug}
-                  className={`reveal flex flex-col items-center gap-14 md:flex-row ${!isEven ? 'md:flex-row-reverse' : ''}`}
+                  className="scroll-mt-28"
                 >
-                  {/* Visuel */}
+                  <Reveal
+                    className={`flex flex-col items-center gap-14 md:flex-row ${!isEven ? 'md:flex-row-reverse' : ''}`}
+                    delay={i % 2 ? 100 : 0}
+                  >
+                    {/* Visuel */}
                   <div className="w-full flex-1">
                     <div
                       className={`relative aspect-[4/3] overflow-hidden rounded-[2.5rem] bg-gradient-to-br ${VISUAL_GRADIENTS[i % VISUAL_GRADIENTS.length]} p-8 shadow-glow`}
@@ -157,13 +172,23 @@ export default async function ServicesPage() {
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                       </Link>
                       <Link
-                        href="/contact"
+                        href={`/contact?service=${encodeURIComponent(svc.title)}`}
                         className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-6 py-3 text-sm font-bold text-ink shadow-soft transition-all hover:-translate-y-0.5 hover:border-blue-200"
                       >
-                        Nous contacter
+                        Demander ce service
                       </Link>
+                      <a
+                        href={buildServiceWhatsAppUrl(svc.title)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 rounded-full border border-green-200 bg-white px-6 py-3 text-sm font-bold text-green-700 shadow-soft transition-all hover:bg-green-50"
+                      >
+                        <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                        WhatsApp
+                      </a>
                     </div>
                   </div>
+                  </Reveal>
                 </div>
               )
             })}
@@ -174,7 +199,7 @@ export default async function ServicesPage() {
       {/* CTA */}
       <section className="pb-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="reveal relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 text-center shadow-glow">
+          <Reveal className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 text-center shadow-glow">
             <div
               className="absolute inset-0 opacity-[0.12]"
               style={{
@@ -198,7 +223,7 @@ export default async function ServicesPage() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>
