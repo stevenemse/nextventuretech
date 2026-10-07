@@ -37,7 +37,7 @@ export default async function DemandesPage({ searchParams }: Props) {
           name="q"
           defaultValue={search}
           placeholder="Rechercher (nom, email, société…)"
-          className="h-9 rounded-md border border-slate-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+          className="h-9 w-full rounded-md border border-slate-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-64"
         />
         <select
           name="status"
@@ -65,8 +65,8 @@ export default async function DemandesPage({ searchParams }: Props) {
           Aucune demande trouvée.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+          <table className="w-full min-w-[760px] text-sm">
             <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
                 <th className="px-4 py-3 text-left font-medium">Contact</th>
