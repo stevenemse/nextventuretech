@@ -8,7 +8,7 @@ export const siteConfig = {
   name: 'NextVenture Tech',
   slogan: 'Transformer vos idées en réalité',
   description:
-    'NextVenture Tech — Développement web, design graphique et solutions IA à Douala, Cameroun.',
+    'NextVenture Tech — Développement web, design graphique et solutions IA. Chaque client, une nouvelle aventure.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nextventuretech.com',
   email: 'nextventuretech237@gmail.com',
   phone: '+237 6 86 03 37 89',

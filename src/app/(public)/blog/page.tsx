@@ -5,18 +5,22 @@ import { ArrowRight, ArrowUpRight, CalendarDays, Newspaper, User } from 'lucide-
 import { getPublishedPosts, getPublishedCategories } from '@/services/blog.service'
 import type { BlogPost } from '@/types/database'
 import { cn } from '@/lib/utils/cn'
+import { getT } from '@/lib/i18n/server'
+import type { Lang, Dictionary } from '@/lib/i18n'
 
-export const metadata: Metadata = {
-  title: 'Blog',
-  description:
-    'Actualités, conseils et insights tech : web, design, intelligence artificielle et digitalisation — par NextVenture Tech, Douala.',
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT()
+  return {
+    title: t.nav.links.blog,
+    description: t.blog.metaDescription,
+  }
 }
 
 type SearchParams = Promise<{ categorie?: string }>
 
-function formatDate(iso: string | null): string {
+function formatDate(iso: string | null, lang: Lang = 'fr'): string {
   if (!iso) return ''
-  return new Intl.DateTimeFormat('fr-FR', {
+  return new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -25,7 +29,7 @@ function formatDate(iso: string | null): string {
 
 /* ─── Carte article ─────────────────────────────────────────── */
 
-function PostCard({ post }: { post: BlogPost }) {
+function PostCard({ post, t, lang }: { post: BlogPost; t: Dictionary; lang: Lang }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -54,7 +58,7 @@ function PostCard({ post }: { post: BlogPost }) {
         <div className="mb-3 flex items-center gap-4 text-xs text-muted">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
-            {formatDate(post.published_at)}
+            {formatDate(post.published_at, lang)}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <User className="h-3.5 w-3.5" aria-hidden="true" />
@@ -68,7 +72,7 @@ function PostCard({ post }: { post: BlogPost }) {
           <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">{post.excerpt}</p>
         )}
         <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-bold text-blue-600">
-          Lire l&apos;article
+          {t.blog.readMore}
           <ArrowUpRight
             className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
             aria-hidden="true"
@@ -81,7 +85,7 @@ function PostCard({ post }: { post: BlogPost }) {
 
 /* ─── Article vedette ───────────────────────────────────────── */
 
-function FeaturedPost({ post }: { post: BlogPost }) {
+function FeaturedPost({ post, t, lang }: { post: BlogPost; t: Dictionary; lang: Lang }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -98,7 +102,7 @@ function FeaturedPost({ post }: { post: BlogPost }) {
           />
         )}
         <span className="absolute left-4 top-4 rounded-full bg-ink px-3 py-1 text-xs font-bold text-white shadow-soft">
-          À la une
+          {t.blog.featured}
         </span>
       </div>
 
@@ -117,10 +121,10 @@ function FeaturedPost({ post }: { post: BlogPost }) {
         <div className="mt-5 flex items-center gap-4 text-sm text-muted">
           <span>{post.author}</span>
           <span className="h-1 w-1 rounded-full bg-slate-300" aria-hidden="true" />
-          <span>{formatDate(post.published_at)}</span>
+          <span>{formatDate(post.published_at, lang)}</span>
         </div>
         <span className="mt-7 inline-flex w-fit items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-bold text-white transition-colors group-hover:bg-blue-600">
-          Lire l&apos;article
+          {t.blog.readMore}
           <ArrowRight
             className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
             aria-hidden="true"
@@ -134,6 +138,7 @@ function FeaturedPost({ post }: { post: BlogPost }) {
 /* ─── Page ──────────────────────────────────────────────────── */
 
 export default async function BlogPage({ searchParams }: { searchParams: SearchParams }) {
+  const { lang, t } = await getT()
   const { categorie } = await searchParams
 
   // Dégradation douce si la table n'existe pas encore (migration non exécutée)
@@ -168,17 +173,16 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
         />
         <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
-            — Blog
+            {t.blog.badge}
           </p>
           <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
-            Idées, conseils &{' '}
+            {t.blog.title1}{' '}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
-              insights tech
+              {t.blog.title2}
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            Web, design, intelligence artificielle et digitalisation — ce que nous apprenons,
-            partagé pour vous aider à grandir.
+            {t.blog.sub}
           </p>
         </div>
       </section>
@@ -198,7 +202,7 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
                     : 'border-border bg-surface text-slate-600 hover:border-blue-300 hover:text-blue-700',
                 )}
               >
-                Tous
+                {t.blog.all}
               </Link>
               {categories.map((cat) => (
                 <Link
@@ -224,27 +228,27 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
                 <Newspaper className="h-6 w-6" aria-hidden="true" />
               </span>
               <h2 className="text-xl font-extrabold text-ink">
-                {categorie ? `Aucun article dans « ${categorie} »` : 'Aucun article pour le moment'}
+                {categorie ? t.blog.emptyCategory(categorie) : t.blog.empty}
               </h2>
               <p className="mt-2 text-muted">
-                Nos premiers articles arrivent très bientôt — revenez nous voir !
+                {t.blog.emptySub}
               </p>
               {categorie && (
                 <Link
                   href="/blog"
                   className="mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-blue-600"
                 >
-                  Voir tous les articles
+                  {t.blog.allArticles}
                 </Link>
               )}
             </div>
           ) : (
             <div className="reveal flex flex-col gap-6">
-              {featured && <FeaturedPost post={featured} />}
+              {featured && <FeaturedPost post={featured} t={t} lang={lang} />}
               {rest.length > 0 && (
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {rest.map((post) => (
-                    <PostCard key={post.id} post={post} />
+                    <PostCard key={post.id} post={post} t={t} lang={lang} />
                   ))}
                 </div>
               )}

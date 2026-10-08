@@ -2,23 +2,17 @@ import Link from 'next/link'
 import { MapPin, Mail, Phone, Clock, ArrowRight } from 'lucide-react'
 import { getSiteSettings } from '@/services/settings.service'
 import { siteConfig } from '@/config/site'
+import { getT } from '@/lib/i18n/server'
 
 const LINKS = {
-  services: [
-    { href: '/services#web-design',                label: 'Web Design' },
-    { href: '/services#graphic-design',            label: 'Graphic Design' },
-    { href: '/services#intelligence-artificielle', label: 'Intelligence Artificielle' },
-    { href: '/services#montage-video',             label: 'Montage Vidéo' },
-    { href: '/services#motion-design',             label: 'Motion Design' },
-  ],
   company: [
-    { href: '/realisations', label: 'Réalisations' },
-    { href: '/tarifs',       label: 'Tarifs' },
-    { href: '/blog',         label: 'Blog' },
-    { href: '/contact',      label: 'Contact' },
-    { href: '/reserver',     label: 'Réserver un Appel' },
+    { href: '/realisations', labelKey: 'work' },
+    { href: '/tarifs',       labelKey: 'pricing' },
+    { href: '/blog',         labelKey: 'blog' },
+    { href: '/contact',      labelKey: 'contact' },
+    { href: '/reserver',     labelKey: 'book' },
   ],
-}
+} as const
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -30,14 +24,14 @@ function WhatsAppIcon({ className }: { className?: string }) {
 }
 
 export async function Footer() {
-  const settings = await getSiteSettings()
+  const [settings, { t }] = await Promise.all([getSiteSettings(), getT()])
   const whatsapp = settings?.whatsapp ?? siteConfig.whatsapp
   const email = settings?.email ?? siteConfig.email
   const phone = settings?.phone ?? siteConfig.phone
   const waLink = `https://wa.me/${whatsapp.replace(/\D/g, '')}`
 
   return (
-    <footer className="rounded-t-[2.5rem] bg-ink text-slate-400" aria-label="Pied de page">
+    <footer className="rounded-t-[2.5rem] bg-ink text-slate-400" aria-label={t.footer.label}>
       <div className="mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 lg:px-8">
         {/* ─── Bandeau CTA ─────────────────────────────────── */}
         <div className="relative mb-16 overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-12 text-center shadow-glow sm:px-12">
@@ -51,21 +45,22 @@ export async function Footer() {
           />
           <div className="relative">
             <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              Un projet en tête ? <span className="text-blue-200">Donnons-lui vie.</span>
+              {t.footer.ctaTitle1}{' '}
+              <span className="text-blue-200">{t.footer.ctaTitle2}</span>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm text-blue-100 sm:text-base">
-              Obtenez votre devis gratuit en quelques minutes — réponse garantie sous 24h.
+              {t.footer.ctaSub}
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <Link
                 href="/reserver"
                 className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-50"
               >
-                Réserver un appel gratuit
+                {t.footer.bookCall}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
               <a
-                href={`${waLink}?text=${encodeURIComponent("Bonjour NextVenture Tech, je souhaite discuter d'un projet.")}`}
+                href={`${waLink}?text=${encodeURIComponent(t.footer.waMessage)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
@@ -94,16 +89,14 @@ export async function Footer() {
                 NextVenture <span className="text-blue-400">Tech</span>
               </span>
             </Link>
-            <p className="text-sm leading-relaxed">
-              {siteConfig.slogan}. Votre partenaire digital à Douala, Cameroun.
-            </p>
+            <p className="text-sm leading-relaxed">{t.footer.tagline}</p>
           </div>
 
           {/* Services */}
-          <nav aria-label="Services">
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">Services</h3>
+          <nav aria-label={t.footer.colServices}>
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">{t.footer.colServices}</h3>
             <ul className="flex flex-col gap-2">
-              {LINKS.services.map(({ href, label }) => (
+              {t.footer.servicesLinks.map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-sm transition-colors hover:text-blue-400">{label}</Link>
                 </li>
@@ -112,12 +105,12 @@ export async function Footer() {
           </nav>
 
           {/* Entreprise */}
-          <nav aria-label="Entreprise">
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">Entreprise</h3>
+          <nav aria-label={t.footer.colCompany}>
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">{t.footer.colCompany}</h3>
             <ul className="flex flex-col gap-2">
-              {LINKS.company.map(({ href, label }) => (
+              {LINKS.company.map(({ href, labelKey }) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm transition-colors hover:text-blue-400">{label}</Link>
+                  <Link href={href} className="text-sm transition-colors hover:text-blue-400">{t.nav.links[labelKey]}</Link>
                 </li>
               ))}
             </ul>
@@ -125,11 +118,11 @@ export async function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">Contact</h3>
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">{t.footer.colContact}</h3>
             <address className="flex flex-col gap-3 text-sm not-italic">
               <div className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
-                <span>Douala, Cameroun</span>
+                <span>{t.footer.address}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
@@ -141,7 +134,7 @@ export async function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
-                <span>Lun – Ven, 9h – 18h</span>
+                <span>{t.footer.hours}</span>
               </div>
             </address>
           </div>
@@ -149,15 +142,15 @@ export async function Footer() {
 
         {/* ─── Barre inférieure ────────────────────────────── */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
-          <p className="text-xs">© {new Date().getFullYear()} NextVenture Tech. Tous droits réservés.</p>
+          <p className="text-xs">© {new Date().getFullYear()} NextVenture Tech. {t.footer.rights}</p>
           <a
-            href={`${waLink}?text=${encodeURIComponent("Bonjour NextVenture Tech, je souhaite discuter d'un projet.")}`}
+            href={`${waLink}?text=${encodeURIComponent(t.footer.waMessage)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-green-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-green-500"
           >
             <WhatsAppIcon className="h-4 w-4" />
-            Discuter sur WhatsApp
+            {t.footer.discuss}
           </a>
         </div>
       </div>

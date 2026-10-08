@@ -5,10 +5,15 @@ import { getSiteSettings } from '@/services/settings.service'
 import { siteConfig } from '@/config/site'
 import { ContactForm } from './contact-form'
 import { Reveal } from '@/components/public/reveal'
+import { getT } from '@/lib/i18n/server'
+import { localizeService } from '@/lib/i18n'
 
-export const metadata: Metadata = {
-  title: 'Contact',
-  description: 'Contactez NextVenture Tech pour discuter de votre projet digital.',
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT()
+  return {
+    title: t.nav.links.contact,
+    description: t.contact.metaDescription,
+  }
 }
 
 interface Props {
@@ -16,21 +21,23 @@ interface Props {
 }
 
 export default async function ContactPage({ searchParams }: Props) {
-  const [services, settings] = await Promise.all([
+  const [{ t }, rawServices, settings] = await Promise.all([
+    getT(),
     getPublishedServices(),
     getSiteSettings(),
   ])
+  const services = rawServices.map((svc) => localizeService(svc, t))
 
   const phone = settings?.phone ?? siteConfig.phone
   const email = settings?.email ?? siteConfig.email
   const whatsapp = settings?.whatsapp ?? siteConfig.whatsapp
 
   const contactInfo = [
-    { icon: MapPin, label: 'Adresse', value: 'Douala, Cameroun' },
-    { icon: Mail,   label: 'Email',   value: email, href: `mailto:${email}` },
-    { icon: Phone,  label: 'WhatsApp', value: phone,
+    { icon: MapPin, label: t.contact.addressLabel, value: t.contact.address },
+    { icon: Mail,   label: t.contact.emailLabel,   value: email, href: `mailto:${email}` },
+    { icon: Phone,  label: t.contact.whatsappLabel, value: phone,
       href: `https://wa.me/${whatsapp.replace(/\D/g, '')}` },
-    { icon: Clock,  label: 'Horaires', value: 'Lun – Ven, 9h – 18h' },
+    { icon: Clock,  label: t.contact.hoursLabel, value: t.contact.hours },
   ]
 
   const { service: serviceParam, plan: planParam } = await searchParams
@@ -52,13 +59,14 @@ export default async function ContactPage({ searchParams }: Props) {
         />
         <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
-            — Contact
+            {t.contact.badge}
           </p>
           <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
-            Obtenez votre devis <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">gratuit</span>
+            {t.contact.title1}{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">{t.contact.title2}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            Répondons à votre message sous 24h. Discutons de votre projet !
+            {t.contact.sub}
           </p>
         </div>
       </section>
@@ -69,7 +77,7 @@ export default async function ContactPage({ searchParams }: Props) {
           <Reveal className="grid gap-10 lg:grid-cols-5">
             {/* Infos contact — cartes 2x2 */}
             <div className="lg:col-span-2">
-              <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-ink">Nos coordonnées</h2>
+              <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-ink">{t.contact.detailsTitle}</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 {contactInfo.map(({ icon: Icon, label, value, href }) => (
                   <Reveal
@@ -100,7 +108,7 @@ export default async function ContactPage({ searchParams }: Props) {
             <div className="lg:col-span-3">
               <div className="rounded-[2rem] border border-border bg-surface p-6 shadow-soft sm:p-9">
                 <h2 className="mb-7 text-2xl font-extrabold tracking-tight text-ink">
-                  Décrivez votre projet
+                  {t.contact.formTitle}
                 </h2>
                 <ContactForm
                   services={services.map((s) => ({ id: s.id, title: s.title }))}

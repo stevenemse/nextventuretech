@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import type { Work } from '@/types/database'
+import { getT } from '@/lib/i18n/server'
 
 interface WorkCardProps {
   work: Work
@@ -41,7 +42,8 @@ const INNER = ({ work }: WorkCardProps) => (
   </>
 )
 
-export function WorkCard({ work }: WorkCardProps) {
+export async function WorkCard({ work }: WorkCardProps) {
+  const { t } = await getT()
   const base = 'group relative block aspect-[4/3] overflow-hidden rounded-3xl bg-ink shadow-soft transition-shadow duration-300 hover:shadow-card'
 
   if (work.project_url) {
@@ -51,7 +53,7 @@ export function WorkCard({ work }: WorkCardProps) {
         target="_blank"
         rel="noopener noreferrer"
         className={base}
-        aria-label={`Voir le projet : ${work.title}`}
+        aria-label={t.realisations.viewProjectAria(work.title)}
       >
         <INNER work={work} />
       </a>

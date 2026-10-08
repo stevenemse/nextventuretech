@@ -6,6 +6,8 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { createWorkRequest } from '@/services/requests.service'
 import { getPublishedServices } from '@/services/services.service'
 import { buildWhatsAppUrl } from '@/lib/utils/whatsapp'
+import { getT } from '@/lib/i18n/server'
+import { localizeService } from '@/lib/i18n'
 import type { ActionResult } from '@/types/actions'
 
 export interface ContactActionData {
@@ -24,6 +26,8 @@ export async function submitContactForm(
   _prev: ActionResult<ContactActionData>,
   formData: FormData,
 ): Promise<ActionResult<ContactActionData>> {
+  const { lang, t } = await getT()
+
   // ── Honeypot anti-bot ──────────────────────────────────────
   // Un humain ne peut pas remplir le champ « website » (inaccessible).
   // Un bot qui le remplit est silencieusement ignoré (pas de fuite d'info).
@@ -32,7 +36,7 @@ export async function submitContactForm(
   })
   if (!honeypot.success || honeypot.data.website !== '') {
     // Réponse factice pour ne pas révéler le piège
-    return { status: 'error', message: 'Veuillez corriger les erreurs du formulaire.' }
+    return { status: 'error', message: t.contactForm.msgInvalid }
   }
 
   // ── Rate limiting ──────────────────────────────────────────
@@ -43,7 +47,10 @@ export async function submitContactForm(
   if (!rateLimitResult.allowed) {
     return {
       status: 'error',
-      message: `Trop de tentatives. Réessayez dans ${rateLimitResult.retryAfter} secondes.`,
+      message:
+        lang === 'en'
+          ? `Too many attempts. Please retry in ${rateLimitResult.retryAfter} seconds.`
+          : `Trop de tentatives. Réessayez dans ${rateLimitResult.retryAfter} secondes.`,
     }
   }
 
@@ -69,7 +76,7 @@ export async function submitContactForm(
     }
     return {
       status: 'error',
-      message: 'Veuillez corriger les erreurs dans le formulaire.',
+      message: t.contactForm.msgFixFields,
       fieldErrors,
     }
   }
@@ -91,8 +98,7 @@ export async function submitContactForm(
     console.error('[submitContactForm] DB error:', err)
     return {
       status: 'error',
-      message:
-        'Une erreur est survenue lors de l\'enregistrement. Veuillez réessayer.',
+      message: t.contactForm.msgServerError,
     }
   }
 
@@ -103,7 +109,8 @@ export async function submitContactForm(
   if (input.service_id) {
     try {
       const services = await getPublishedServices()
-      serviceName = services.find((s) => s.id === input.service_id)?.title
+      const selected = services.find((s) => s.id === input.service_id)
+      if (selected) serviceName = localizeService(selected, t).title
     } catch {
       // best-effort — le message WhatsApp reste utile sans le titre
     }
@@ -113,11 +120,12 @@ export async function submitContactForm(
     name: input.name,
     service: serviceName,
     budget: input.budget ?? undefined,
+    lang,
   })
 
   return {
     status: 'success',
-    message: 'Votre demande a bien été enregistrée ! Nous vous contacterons rapidement.',
+    message: t.contactForm.msgSuccess,
     data: { whatsappUrl, name: input.name },
   }
 }

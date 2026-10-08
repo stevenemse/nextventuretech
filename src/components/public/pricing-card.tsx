@@ -3,28 +3,42 @@ import { Check, MessageCircle, Zap } from 'lucide-react'
 import type { PricingPlan } from '@/types/database'
 import { cn } from '@/lib/utils/cn'
 import { siteConfig } from '@/config/site'
+import { getDict } from '@/lib/i18n'
+import type { Lang } from '@/lib/i18n'
 
 interface PricingCardProps {
   plan: PricingPlan
   /** Titre du service auquel ce plan est rattaché (pour le préremplissage). */
   serviceTitle?: string
+  /** Langue d'affichage (FR/EN). */
+  lang?: Lang
+}
+
+/** Formate un prix selon la locale (150 000 FCFA / 150,000 FCFA). */
+function formatPrice(value: number, lang: Lang): string {
+  return value.toLocaleString(lang === 'fr' ? 'fr-FR' : 'en-US')
 }
 
 /**
  * Message WhatsApp prérempli pour ce plan tarifaire.
  * Forme : "Bonjour, je suis interessé(e) par votre offre X (Y, prix Z)..."
  */
-export function buildPlanWhatsAppUrl(plan: PricingPlan, serviceTitle?: string): string {
+export function buildPlanWhatsAppUrl(
+  plan: PricingPlan,
+  serviceTitle?: string,
+  lang: Lang = 'fr',
+): string {
+  const t = getDict(lang)
   const number = siteConfig.whatsapp.replace(/\D/g, '')
   const price = plan.is_custom_quote
-    ? 'sur devis'
-    : `${plan.price?.toLocaleString('fr-FR')} ${plan.currency}`
-  const servicePart = serviceTitle ? ` pour ${serviceTitle}` : ''
-  const message = `Bonjour NextVenture Tech ! Je suis interessé(e) par votre offre "${plan.name}"${servicePart} (${price}). Pouvez-vous me donner plus de details ?`
+    ? t.pricing.waPriceOnRequest
+    : `${formatPrice(plan.price ?? 0, lang)} ${plan.currency}`
+  const message = t.pricing.waMessage(plan.name, serviceTitle, price)
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 }
 
-export function PricingCard({ plan, serviceTitle }: PricingCardProps) {
+export function PricingCard({ plan, serviceTitle, lang = 'fr' }: PricingCardProps) {
+  const t = getDict(lang)
   const contactHref = `/contact?service=${encodeURIComponent(serviceTitle ?? '')}&plan=${encodeURIComponent(plan.name)}`
   return (
     <div
@@ -40,7 +54,7 @@ export function PricingCard({ plan, serviceTitle }: PricingCardProps) {
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-bold text-blue-600 shadow-md">
             <Zap className="h-3 w-3 fill-blue-600" aria-hidden="true" />
-            Populaire
+            {t.pricing.popular}
           </span>
         </div>
       )}
@@ -61,12 +75,12 @@ export function PricingCard({ plan, serviceTitle }: PricingCardProps) {
       <div className="mb-6">
         {plan.is_custom_quote ? (
           <p className={cn('text-2xl font-extrabold', plan.is_popular ? 'text-white' : 'text-blue-600')}>
-            Sur devis
+            {t.pricing.customPrice}
           </p>
         ) : (
           <div className="flex items-baseline gap-1">
             <span className={cn('text-3xl font-extrabold tabular-nums', plan.is_popular ? 'text-white' : 'text-slate-900')}>
-              {plan.price?.toLocaleString('fr-FR')}
+              {plan.price != null ? formatPrice(plan.price, lang) : ''}
             </span>
             <span className={cn('text-sm font-medium', plan.is_popular ? 'text-blue-200' : 'text-slate-500')}>
               {plan.currency}
@@ -101,10 +115,10 @@ export function PricingCard({ plan, serviceTitle }: PricingCardProps) {
               : 'bg-blue-600 text-white hover:bg-blue-700',
           )}
         >
-          {plan.is_custom_quote ? 'Demander un devis' : 'Commencer avec cette formule'}
+          {plan.is_custom_quote ? t.pricing.requestQuote : t.pricing.startPlan}
         </Link>
         <a
-          href={buildPlanWhatsAppUrl(plan, serviceTitle)}
+          href={buildPlanWhatsAppUrl(plan, serviceTitle, lang)}
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
@@ -115,7 +129,7 @@ export function PricingCard({ plan, serviceTitle }: PricingCardProps) {
           )}
         >
           <MessageCircle className="h-4 w-4" aria-hidden="true" />
-          Discuter sur WhatsApp
+          {t.pricing.discuss}
         </a>
       </div>
     </div>

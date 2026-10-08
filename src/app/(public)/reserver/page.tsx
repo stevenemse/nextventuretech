@@ -3,20 +3,19 @@ import { getSiteSettings } from '@/services/settings.service'
 import { siteConfig } from '@/config/site'
 import { CalendlyWidget, CalendlyFallback } from './calendly-widget'
 import { CheckCircle2 } from 'lucide-react'
+import { getT } from '@/lib/i18n/server'
 
-export const metadata: Metadata = {
-  title: 'Réserver un Appel',
-  description: 'Réservez un appel gratuit de 30 minutes avec notre équipe.',
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT()
+  return {
+    title: t.nav.links.book,
+    description: t.reserver.metaDescription,
+  }
 }
 
-const BENEFITS = [
-  'Appel gratuit de 30 minutes',
-  'Analyse de votre projet',
-  'Devis transparent et sans engagement',
-  'Conseils d\'experts',
-]
 
 export default async function ReserverPage() {
+  const { t } = await getT()
   const settings = await getSiteSettings()
   const calendlyUrl = settings?.calendly_url ?? ''
   const whatsapp = settings?.whatsapp ?? siteConfig.whatsapp
@@ -39,13 +38,14 @@ export default async function ReserverPage() {
         />
         <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
-            — Réservation
+            {t.reserver.badge}
           </p>
           <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
-            Réservez un appel <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">gratuit</span>
+            {t.reserver.title1}{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">{t.reserver.title2}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            30 minutes pour discuter de votre projet et recevoir nos premiers conseils.
+            {t.reserver.sub}
           </p>
         </div>
       </section>
@@ -57,10 +57,10 @@ export default async function ReserverPage() {
             {/* Avantages */}
             <div className="lg:col-span-2">
               <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-ink">
-                Ce que vous obtenez
+                {t.reserver.benefitsTitle}
               </h2>
               <ul className="mb-8 flex flex-col gap-3">
-                {BENEFITS.map((b) => (
+                {t.reserver.benefits.map((b) => (
                   <li
                     key={b}
                     className="flex items-start gap-3 rounded-2xl border border-border bg-surface p-4 shadow-soft"
@@ -83,17 +83,17 @@ export default async function ReserverPage() {
                   aria-hidden="true"
                 />
                 <div className="relative">
-                  <p className="text-base font-extrabold text-white">Disponibles immédiatement ?</p>
+                  <p className="text-base font-extrabold text-white">{t.reserver.immediateTitle}</p>
                   <p className="mt-1 text-sm leading-relaxed text-blue-100">
-                    Contactez-nous directement sur WhatsApp pour une réponse instantanée.
+                    {t.reserver.immediateText}
                   </p>
                   <a
-                    href={`https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Bonjour, je souhaite réserver un appel.')}`}
+                    href={`https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(t.reserver.waMessage)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50"
                   >
-                    Ouvrir WhatsApp →
+                    {t.reserver.openWa}
                   </a>
                 </div>
               </div>

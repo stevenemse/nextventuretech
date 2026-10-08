@@ -22,8 +22,7 @@ INSERT INTO site_settings (
 INSERT INTO site_statistics (value, label, display_order, is_active) VALUES
   ('50+', 'Projets Réalisés',    1, true),
   ('30+', 'Clients Satisfaits',  2, true),
-  ('5+',  'Ans d''Expérience',   3, true),
-  ('4.8', 'Note Moyenne',        4, true)
+  ('5+',  'Ans d''Expérience',   3, true)
 ON CONFLICT DO NOTHING;
 
 -- ─── services ───────────────────────────────────────────────

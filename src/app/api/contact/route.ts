@@ -4,6 +4,8 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { createWorkRequest } from '@/services/requests.service'
 import { getPublishedServices } from '@/services/services.service'
 import { buildWhatsAppUrl } from '@/lib/utils/whatsapp'
+import { getT } from '@/lib/i18n/server'
+import { localizeService } from '@/lib/i18n'
 
 /**
  * POST /api/contact
@@ -12,13 +14,19 @@ import { buildWhatsAppUrl } from '@/lib/utils/whatsapp'
  * Applique rate limiting, validation Zod et persistance DB.
  */
 export async function POST(request: NextRequest) {
+  const { lang, t } = await getT()
   // ── Rate limiting ──────────────────────────────────────────
   const ip = getClientIp(request.headers)
   const rateLimit = checkRateLimit(ip)
 
   if (!rateLimit.allowed) {
     return NextResponse.json(
-      { error: `Trop de tentatives. Réessayez dans ${rateLimit.retryAfter}s.` },
+      {
+        error:
+          lang === 'en'
+            ? `Too many attempts. Please retry in ${rateLimit.retryAfter}s.`
+            : `Trop de tentatives. Réessayez dans ${rateLimit.retryAfter}s.`,
+      },
       {
         status: 429,
         headers: {
@@ -45,7 +53,7 @@ export async function POST(request: NextRequest) {
   })
   if (!honeypot.success || honeypot.data.website !== '') {
     // Réponse factice pour ne pas révéler le piège
-    return NextResponse.json({ error: 'Données invalides.' }, { status: 422 })
+    return NextResponse.json({ error: t.contactForm.msgInvalid }, { status: 422 })
   }
 
   // ── Validation Zod ─────────────────────────────────────────
@@ -53,7 +61,7 @@ export async function POST(request: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json(
       {
-        error: 'Données invalides.',
+        error: t.contactForm.msgInvalid,
         fieldErrors: parsed.error.flatten().fieldErrors,
       },
       { status: 422 },
@@ -76,7 +84,7 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error('[POST /api/contact]', err)
     return NextResponse.json(
-      { error: 'Erreur serveur. Veuillez réessayer.' },
+      { error: t.contactForm.msgServerError },
       { status: 500 },
     )
   }
@@ -87,7 +95,8 @@ export async function POST(request: NextRequest) {
   if (input.service_id) {
     try {
       const services = await getPublishedServices()
-      serviceName = services.find((s) => s.id === input.service_id)?.title
+      const selected = services.find((s) => s.id === input.service_id)
+      if (selected) serviceName = localizeService(selected, t).title
     } catch {
       // best-effort
     }
@@ -97,6 +106,7 @@ export async function POST(request: NextRequest) {
     name: input.name,
     service: serviceName,
     budget: input.budget ?? undefined,
+    lang,
   })
 
   return NextResponse.json(

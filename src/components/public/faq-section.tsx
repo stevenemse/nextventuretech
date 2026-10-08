@@ -3,50 +3,24 @@
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
-
-const FAQ_ITEMS = [
-  {
-    q: 'Quels services propose NextVenture Tech ?',
-    a: 'Nous proposons des services de développement web, de design graphique (logos, chartes graphiques), d\'intelligence artificielle (chatbots, recommandations), de montage vidéo et de motion design.',
-  },
-  {
-    q: 'Où êtes-vous situés ?',
-    a: 'Notre siège social est situé à Douala, Cameroun. Nous travaillons également avec des clients du monde entier.',
-  },
-  {
-    q: 'Quel type de sites web pouvez-vous créer ?',
-    a: 'Nous créons des sites web sur mesure, des boutiques en ligne (e-commerce), des sites vitrines et des plateformes interactives adaptées à vos besoins.',
-  },
-  {
-    q: 'Quelle est la durée moyenne de développement ?',
-    a: 'La durée dépend de la complexité du projet. En général, comptez entre 2 et 8 semaines pour un site web, selon les fonctionnalités requises.',
-  },
-  {
-    q: 'Offrez-vous des services de maintenance ?',
-    a: 'Oui, nous proposons des contrats de maintenance pour assurer que votre site reste à jour, sécurisé et performant sur le long terme.',
-  },
-  {
-    q: 'Pouvez-vous intégrer un chatbot à mon site existant ?',
-    a: 'Absolument. Nous pouvons intégrer un chatbot intelligent à votre site web actuel, quel que soit la technologie utilisée.',
-  },
-]
+import { useLang } from '@/lib/i18n/context'
 
 export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0)
+  const { t } = useLang()
+  const FAQ_ITEMS = t.faq.items
 
   return (
     <section className="bg-surface py-24" aria-labelledby="faq-heading">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="reveal mb-14 text-center">
           <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-background px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
-            — FAQ
+            {t.faq.badge}
           </p>
           <h2 id="faq-heading" className="text-4xl font-extrabold tracking-tight text-ink">
-            Questions <span className="text-blue-600">fréquentes</span>
+            {t.faq.title1} <span className="text-blue-600">{t.faq.title2}</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-muted">
-            Tout ce que vous devez savoir avant de démarrer votre projet avec nous.
-          </p>
+          <p className="mx-auto mt-4 max-w-md text-muted">{t.faq.subtitle}</p>
         </div>
 
         <div className="reveal flex flex-col gap-3.5">

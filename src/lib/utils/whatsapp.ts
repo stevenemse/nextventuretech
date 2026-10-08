@@ -1,4 +1,5 @@
 import { siteConfig } from '@/config/site'
+import type { Lang } from '@/lib/i18n'
 
 /** Neutralise les caractères de contrôle et bornes la longueur du message. */
 function sanitize(input: string | undefined, max = 150): string {
@@ -18,6 +19,8 @@ interface WhatsAppOptions {
   plan?: string
   /** Budget indiqué (optionnel) */
   budget?: string
+  /** Langue du message (défaut FR) */
+  lang?: Lang
 }
 
 /**
@@ -39,22 +42,38 @@ export function buildWhatsAppUrl(options: WhatsAppOptions | string = {}): string
   const service = sanitize(opts.service)
   const plan = sanitize(opts.plan)
   const budget = sanitize(opts.budget, 60)
+  const lang: Lang = opts.lang === 'en' ? 'en' : 'fr'
 
-  let message = 'Bonjour NextVenture Tech'
-  if (name) message += `, je suis ${name}`
-  else message += ','
+  // Sujet : offre / service / generic — selon la langue
+  const subject =
+    plan
+      ? lang === 'en'
+        ? `your “${plan}” offer`
+        : `votre offre « ${plan} »`
+      : service
+        ? lang === 'en'
+          ? `your “${service}” service`
+          : `votre service « ${service} »`
+        : null
 
-  const subject = [
-    plan ? `votre offre « ${plan} »` : service ? `votre service « ${service} »` : null,
-  ]
-    .filter(Boolean)
-    .join('')
-
-  if (subject) message += ` et je suis intéressé(e) par ${subject}`
-  else message += " et je souhaite discuter d'un projet"
-
-  if (budget) message += ` (budget : ${budget})`
-  message += '. Merci.'
+  let message: string
+  if (lang === 'en') {
+    message = 'Hello NextVenture Tech'
+    message += name ? `, I'm ${name}` : ','
+    message += subject
+      ? ` and I'm interested in ${subject}`
+      : ' and I would like to discuss a project'
+    if (budget) message += ` (budget: ${budget})`
+    message += '. Thank you.'
+  } else {
+    message = 'Bonjour NextVenture Tech'
+    message += name ? `, je suis ${name}` : ','
+    message += subject
+      ? ` et je suis intéressé(e) par ${subject}`
+      : " et je souhaite discuter d'un projet"
+    if (budget) message += ` (budget : ${budget})`
+    message += '. Merci.'
+  }
 
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 }

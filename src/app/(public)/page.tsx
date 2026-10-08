@@ -12,12 +12,18 @@ import { WorkCard } from '@/components/public/work-card'
 import { FaqSection } from '@/components/public/faq-section'
 import { JsonLd } from '@/components/seo/json-ld'
 import { Reveal } from '@/components/public/reveal'
+import { CountUp } from '@/components/public/count-up'
 import { siteConfig } from '@/config/site'
+import { getT } from '@/lib/i18n/server'
+import { localizeService } from '@/lib/i18n'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: `${siteConfig.name} — ${siteConfig.slogan}`,
-  description: siteConfig.description,
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT()
+  return {
+    title: `${siteConfig.name} — ${t.home.metaTitle}`,
+    description: t.home.metaDescription,
+  }
 }
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -36,19 +42,18 @@ const TILE_GRADIENTS = [
   'from-emerald-400 to-teal-600',
 ]
 
-const VALUE_PROPS = [
-  { icon: Globe,    title: 'Sites web sur mesure',   desc: 'Rapides, modernes et pensés pour convertir.' },
-  { icon: Palette,  title: 'Design professionnel',   desc: 'Une identité visuelle qui inspire confiance.' },
-  { icon: BrainCircuit, title: 'Solutions IA',       desc: 'Chatbots et automatisations intelligents.' },
-  { icon: Rocket,   title: 'Support réactif',        desc: 'Une équipe disponible et à votre écoute.' },
-]
+/** Icônes des cartes valeurs (ordre = ordre du dictionnaire). */
+const VALUE_ICONS = [Globe, Palette, BrainCircuit, Rocket]
 
 export default async function HomePage() {
-  const [services, works, stats] = await Promise.all([
+  const { t } = await getT()
+
+  const [rawServices, works, stats] = await Promise.all([
     getPublishedServices(),
     getPublishedWorks(),
     getActiveStats(),
   ])
+  const services = rawServices.map((svc) => localizeService(svc, t))
 
   // ── SEO : données structurées Organization ──
   const organizationLd = {
@@ -104,13 +109,13 @@ export default async function HomePage() {
               {/* Badge */}
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-blue-600" aria-hidden="true" />
-                Agence digitale — Douala
+                {t.home.badge}
               </div>
 
               <h1 className="text-5xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-6xl lg:text-[4.25rem]">
-                Transformer vos idées en{' '}
+                {t.home.h1Pre}{' '}
                 <span className="relative inline-block bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
-                  réalité
+                  {t.home.h1Highlight}
                   <svg
                     className="absolute -bottom-2 left-0 w-full"
                     height="8"
@@ -132,8 +137,7 @@ export default async function HomePage() {
               </h1>
 
               <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted">
-                Nous concevons des sites web, des identités visuelles et des solutions IA
-                qui propulsent votre activité. Stratégie, design, technologie — un seul partenaire.
+                {t.home.heroSub}
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -141,7 +145,7 @@ export default async function HomePage() {
                   href="/reserver"
                   className="group inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"
                 >
-                  Réserver un appel gratuit
+                  {t.common.bookCall}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
                 <Link
@@ -151,7 +155,7 @@ export default async function HomePage() {
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600/10">
                     <Play className="h-3 w-3 fill-blue-600 text-blue-600" aria-hidden="true" />
                   </span>
-                  Voir nos projets
+                  {t.home.seeProjects}
                 </Link>
               </div>
 
@@ -161,9 +165,11 @@ export default async function HomePage() {
                   {stats.slice(0, 4).map((stat, i) => (
                     <div key={stat.id} className={i > 0 ? 'sm:border-l sm:border-border sm:pl-6' : ''}>
                       <dd className="text-3xl font-extrabold tabular-nums tracking-tight text-ink sm:text-4xl">
-                        {stat.value}
+                        <CountUp value={stat.value} />
                       </dd>
-                      <dt className="mt-1 text-xs font-medium text-muted">{stat.label}</dt>
+                      <dt className="mt-1 text-xs font-medium text-muted">
+                        {t.stats.labels[stat.label] ?? stat.label}
+                      </dt>
                     </div>
                   ))}
                 </dl>
@@ -186,11 +192,11 @@ export default async function HomePage() {
                   }}
                 />
                 <p className="relative max-w-[15rem] text-3xl font-extrabold leading-tight text-white">
-                  Des expériences digitales qui{' '}
-                  <span className="text-blue-200">convertissent</span>.
+                  {t.home.cardTextPre}{' '}
+                  <span className="text-blue-200">{t.home.cardTextHighlight}</span>
                 </p>
                 <div className="absolute right-8 top-8 rounded-full border border-white/25 bg-white/15 px-4 py-1.5 text-xs font-semibold text-white backdrop-blur">
-                  Agence digitale
+                  {t.home.cardBadge}
                 </div>
                 <div className="absolute bottom-8 left-8 flex h-14 w-14 items-center justify-center rounded-full border border-white/30 bg-white/15 backdrop-blur transition-transform hover:scale-105">
                   <Play className="ml-0.5 h-5 w-5 fill-white text-white" />
@@ -205,9 +211,9 @@ export default async function HomePage() {
                     <Compass className="h-4 w-4" aria-hidden="true" />
                   </span>
                 </div>
-                <p className="mt-3 text-sm font-bold text-white">Stratégie</p>
+                <p className="mt-3 text-sm font-bold text-white">{t.home.strategy}</p>
                 <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                  Recherche, analyse d&apos;audience et insights.
+                  {t.home.strategyDesc}
                 </p>
               </div>
 
@@ -217,8 +223,12 @@ export default async function HomePage() {
                   <Rocket className="h-5 w-5 text-white" />
                 </span>
                 <div>
-                  <p className="text-sm font-extrabold text-ink">{stats[0]?.value ?? '30+'}</p>
-                  <p className="text-xs text-muted">{stats[0]?.label ?? 'Projets livrés'}</p>
+                  <p className="text-sm font-extrabold text-ink">
+                    <CountUp value={stats[0]?.value ?? t.home.cardStatValue} />
+                  </p>
+                  <p className="text-xs text-muted">
+                    {t.stats.labels[stats[0]?.label ?? ''] ?? stats[0]?.label ?? t.home.cardStatLabel}
+                  </p>
                 </div>
               </div>
             </div>
@@ -236,17 +246,18 @@ export default async function HomePage() {
             <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6">
               <div>
                 <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
-                  — Services
+                  {t.home.servicesBadge}
                 </p>
                 <h2 id="services-heading" className="text-4xl font-extrabold tracking-tight text-ink">
-                  Ce que nous <span className="text-blue-600">offrons</span>
+                  {t.home.servicesTitle1}{' '}
+                  <span className="text-blue-600">{t.home.servicesTitle2}</span>
                 </h2>
               </div>
               <Link
                 href="/services"
                 className="group hidden items-center gap-1.5 text-sm font-bold text-blue-600 transition-colors hover:text-blue-700 sm:inline-flex"
               >
-                Voir tous les services
+                {t.home.seeAllServices}
                 <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </Reveal>
@@ -275,9 +286,9 @@ export default async function HomePage() {
                     <Link
                       href={`/services#${svc.slug}`}
                       className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 transition-colors group-hover:text-blue-700"
-                      aria-label={`En savoir plus sur ${svc.title}`}
+                      aria-label={t.common.learnAbout(svc.title)}
                     >
-                      En savoir plus
+                      {t.common.seeMore}
                       <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
                     </Link>
                   </Reveal>
@@ -295,46 +306,44 @@ export default async function HomePage() {
             {/* Texte gauche */}
             <Reveal>
               <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-background px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
-                — À propos
+                {t.home.aboutBadge}
               </p>
               <h2 id="about-heading" className="text-4xl font-extrabold tracking-tight text-ink">
-                L&apos;histoire derrière{' '}
+                {t.home.aboutTitle1}{' '}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
-                  NextVenture Tech
+                  {t.home.aboutTitle2}
                 </span>
               </h2>
-              <p className="mt-5 leading-relaxed text-muted">
-                NextVenture Tech est né d&apos;une mission simple — transformer les idées
-                en solutions digitales impactantes. Aujourd&apos;hui, nous aidons les
-                entreprises à croître grâce au design, à l&apos;innovation et à une
-                approche centrée sur les résultats.
-              </p>
+              <p className="mt-5 leading-relaxed text-muted">{t.home.aboutText}</p>
 
               {/* Cartes valeurs */}
               <div className="mt-9 grid gap-4 sm:grid-cols-2">
-                {VALUE_PROPS.map(({ icon: Icon, title, desc }) => (
-                  <div
-                    key={title}
-                    className="flex items-start gap-3.5 rounded-2xl border border-border bg-background p-4 transition-colors hover:border-blue-200"
-                  >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-soft">
-                      <Icon className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-extrabold text-ink">{title}</p>
-                      <p className="mt-0.5 text-xs leading-relaxed text-muted">{desc}</p>
+                {t.home.values.map(({ title, desc }, idx) => {
+                  const Icon = VALUE_ICONS[idx % VALUE_ICONS.length] ?? Sparkles
+                  return (
+                    <div
+                      key={title}
+                      className="flex items-start gap-3.5 rounded-2xl border border-border bg-background p-4 transition-colors hover:border-blue-200"
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-soft">
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                      <div>
+                        <p className="text-sm font-extrabold text-ink">{title}</p>
+                        <p className="mt-0.5 text-xs leading-relaxed text-muted">{desc}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
               <Link
                 href="/contact"
                 className="group mt-9 inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"
               >
-                Nous contacter
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-              </Link>
+                  {t.home.contactLink}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </Link>
             </Reveal>
 
             {/* Visuel droite */}
@@ -352,7 +361,22 @@ export default async function HomePage() {
                 <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-600/25 blur-[80px]" aria-hidden="true" />
 
                 <div className="relative flex aspect-[5/4] items-center justify-center">
-                  <div className="flex h-44 w-44 items-center justify-center rounded-full bg-blue-600/15 ring-1 ring-white/10">
+                  {/* Ondes concentriques animées autour de la fusée */}
+                  <span
+                    className="rocket-wave absolute h-44 w-44 rounded-full border border-blue-400/40 bg-blue-500/15"
+                    aria-hidden="true"
+                  />
+                  <span
+                    className="rocket-wave absolute h-44 w-44 rounded-full border border-blue-400/40 bg-blue-500/15"
+                    style={{ animationDelay: '0.9s' }}
+                    aria-hidden="true"
+                  />
+                  <span
+                    className="rocket-wave absolute h-44 w-44 rounded-full border border-blue-400/40 bg-blue-500/15"
+                    style={{ animationDelay: '1.8s' }}
+                    aria-hidden="true"
+                  />
+                  <div className="rocket-float relative flex h-44 w-44 items-center justify-center rounded-full bg-blue-600/15 ring-1 ring-white/10">
                     <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 shadow-glow">
                       <Rocket className="h-14 w-14 text-white" aria-hidden="true" />
                     </div>
@@ -367,15 +391,23 @@ export default async function HomePage() {
                     <Check className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <div>
-                    <p className="text-sm font-extrabold text-ink">{stats[1]?.value}</p>
-                    <p className="text-xs text-muted">{stats[1]?.label}</p>
+                    <p className="text-sm font-extrabold text-ink">
+                      <CountUp value={stats[1]?.value ?? ''} />
+                    </p>
+                    <p className="text-xs text-muted">
+                      {stats[1] && (t.stats.labels[stats[1].label] ?? stats[1].label)}
+                    </p>
                   </div>
                 </div>
               )}
               {stats.length > 2 && (
                 <div className="absolute -top-6 right-8 rounded-2xl border border-border bg-white px-5 py-3 text-center shadow-card">
-                  <p className="text-lg font-extrabold text-blue-600">{stats[2]?.value}</p>
-                  <p className="text-xs text-muted">{stats[2]?.label}</p>
+                  <p className="text-lg font-extrabold text-blue-600">
+                    <CountUp value={stats[2]?.value ?? ''} />
+                  </p>
+                  <p className="text-xs text-muted">
+                    {stats[2] && (t.stats.labels[stats[2].label] ?? stats[2].label)}
+                  </p>
                 </div>
               )}
             </Reveal>
@@ -389,15 +421,13 @@ export default async function HomePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal className="mb-14 text-center">
               <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
-                — Nos derniers projets
+                {t.home.worksBadge}
               </p>
               <h2 id="works-heading" className="mx-auto max-w-2xl text-4xl font-extrabold tracking-tight text-ink">
-                Explorez notre showcase de{' '}
-                <span className="text-blue-600">projets réalisés</span>
+                {t.home.worksTitle1}{' '}
+                <span className="text-blue-600">{t.home.worksTitle2}</span>
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-muted">
-                Des projets concrets pour des clients réels. Chaque réalisation raconte une histoire.
-              </p>
+              <p className="mx-auto mt-4 max-w-xl text-muted">{t.home.worksIntro}</p>
             </Reveal>
 
             <div className="grid gap-6 sm:grid-cols-2">
@@ -413,7 +443,7 @@ export default async function HomePage() {
                 href="/realisations"
                 className="group inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"
               >
-                Voir toutes les réalisations
+                {t.home.seeAllWorks}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </Reveal>
@@ -425,7 +455,7 @@ export default async function HomePage() {
       <FaqSection />
 
       {/* ─── CTA FINAL ─────────────────────────────────────── */}
-      <section className="pb-28 pt-4" aria-label="Appel à l'action">
+      <section className="pb-28 pt-4" aria-label={t.home.ctaSectionLabel}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-6 py-20 text-center shadow-glow sm:px-12">
             <div
@@ -441,27 +471,27 @@ export default async function HomePage() {
 
             <div className="relative mx-auto max-w-2xl">
               <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-100 backdrop-blur">
-                — Démarrez maintenant
+                {t.home.ctaBadge}
               </p>
               <h2 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-                Prêt pour votre <span className="text-blue-200">prochain projet</span> ?
+                {t.home.ctaTitle1}{' '}
+                <span className="text-blue-200">{t.home.ctaTitle2}</span>
+                {t.home.ctaTitle3}
               </h2>
-              <p className="mt-5 text-lg text-blue-100">
-                Réservez un appel gratuit de 30 minutes. Pas d&apos;engagement, juste une conversation.
-              </p>
+              <p className="mt-5 text-lg text-blue-100">{t.home.ctaSub}</p>
               <div className="mt-9 flex flex-wrap justify-center gap-3">
                 <Link
                   href="/reserver"
                   className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50"
                 >
-                  Réserver un appel gratuit
+                  {t.common.bookCall}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 text-sm font-bold text-white transition-colors hover:bg-white/10"
                 >
-                  Nous écrire
+                  {t.common.writeUs}
                 </Link>
               </div>
             </div>

@@ -6,11 +6,16 @@ import { getPublishedServices } from '@/services/services.service'
 import { JsonLd } from '@/components/seo/json-ld'
 import { Reveal } from '@/components/public/reveal'
 import { siteConfig } from '@/config/site'
+import { getT } from '@/lib/i18n/server'
+import { localizeService } from '@/lib/i18n'
 
-export const metadata: Metadata = {
-  title: 'Services',
-  description: 'Découvrez nos services : Web Design, Graphic Design, Intelligence Artificielle, Montage Vidéo et Motion Design.',
-  alternates: { canonical: '/services' },
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT()
+  return {
+    title: 'Services',
+    description: t.services.metaDescription,
+    alternates: { canonical: '/services' },
+  }
 }
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -30,17 +35,17 @@ const VISUAL_GRADIENTS = [
 ]
 
 /**
- * Construit une URL WhatsApp préremplie pour un service précis.
- * Utilisé pour le parcours direct : clic sur "WhatsApp" → message déjà rédigé.
+ * Construit une URL WhatsApp avec un message prérempli.
+ * Le message vient du dictionnaire (FR/EN) — parcours direct : clic → message rédigé.
  */
-function buildServiceWhatsAppUrl(serviceTitle: string): string {
+function buildServiceWhatsAppUrl(message: string): string {
   const number = siteConfig.whatsapp.replace(/\D/g, '')
-  const message = `Bonjour NextVenture Tech ! Je suis interessé(e) par votre service "${serviceTitle}". Pouvez-vous me donner plus d'informations (delais, tarifs, etapes) ?`
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 }
 
 export default async function ServicesPage() {
-  const services = await getPublishedServices()
+  const { t } = await getT()
+  const services = (await getPublishedServices()).map((svc) => localizeService(svc, t))
 
   // ── SEO : données structurées Service ──
   const base = siteConfig.url.replace(/\/$/, '')
@@ -86,14 +91,14 @@ export default async function ServicesPage() {
         />
         <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
-            — Nos services
+            {t.services.badge}
           </p>
           <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
-            Des solutions <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">sur mesure</span>
+            {t.services.title1}{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">{t.services.title2}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            De la conception à la livraison, nous transformons vos idées en produits digitaux
-            qui font la différence.
+            {t.services.sub}
           </p>
         </div>
       </section>
@@ -145,7 +150,7 @@ export default async function ServicesPage() {
                   {/* Contenu */}
                   <div className="flex-1">
                     <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
-                      Service {String(i + 1).padStart(2, '0')}
+                      {t.services.numberBadge(i + 1)}
                     </div>
                     <h2 className="text-4xl font-extrabold tracking-tight text-ink">{svc.title}</h2>
                     {svc.description && (
@@ -168,17 +173,17 @@ export default async function ServicesPage() {
                         href={`/tarifs#${svc.slug}`}
                         className="group inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"
                       >
-                        Voir les tarifs
+                        {t.services.pricingCta}
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                       </Link>
                       <Link
                         href={`/contact?service=${encodeURIComponent(svc.title)}`}
                         className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-6 py-3 text-sm font-bold text-ink shadow-soft transition-all hover:-translate-y-0.5 hover:border-blue-200"
                       >
-                        Demander ce service
+                        {t.services.requestCta}
                       </Link>
                       <a
-                        href={buildServiceWhatsAppUrl(svc.title)}
+                        href={buildServiceWhatsAppUrl(t.services.waMessage(svc.title))}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 rounded-full border border-green-200 bg-white px-6 py-3 text-sm font-bold text-green-700 shadow-soft transition-all hover:bg-green-50"
@@ -210,16 +215,17 @@ export default async function ServicesPage() {
             />
             <div className="relative">
               <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Vous avez un <span className="text-blue-200">projet</span> en tête ?
+                {t.services.ctaTitle1} <span className="text-blue-200">{t.services.ctaTitle2}</span>{' '}
+                {t.services.ctaTitle3}
               </h2>
               <p className="mx-auto mt-3 max-w-md text-blue-100">
-                Réservez un appel gratuit et parlons-en. Réponse sous 24h.
+                {t.services.ctaSub}
               </p>
               <Link
                 href="/reserver"
                 className="group mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50"
               >
-                Réserver un appel gratuit
+                {t.common.bookCall}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>

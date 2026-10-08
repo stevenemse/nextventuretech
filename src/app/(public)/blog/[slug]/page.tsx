@@ -19,6 +19,8 @@ import type { BlogPost } from '@/types/database'
 import { cn } from '@/lib/utils/cn'
 import { JsonLd } from '@/components/seo/json-ld'
 import { siteConfig } from '@/config/site'
+import { getT } from '@/lib/i18n/server'
+import type { Dictionary } from '@/lib/i18n'
 
 type Params = Promise<{ slug: string }>
 
@@ -26,8 +28,8 @@ type Params = Promise<{ slug: string }>
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params
-  const post = await getPublishedPostBySlug(slug)
-  if (!post) return { title: 'Article introuvable' }
+  const [{ t }, post] = await Promise.all([getT(), getPublishedPostBySlug(slug)])
+  if (!post) return { title: t.blog.notFoundTitle }
 
   return {
     title: post.seo_title ?? post.title,
@@ -45,9 +47,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 /* ─── Helpers ───────────────────────────────────────────────── */
 
-function formatDate(iso: string | null): string {
+function formatDate(iso: string | null, lang: 'fr' | 'en' = 'fr'): string {
   if (!iso) return ''
-  return new Intl.DateTimeFormat('fr-FR', {
+  return new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -132,9 +134,11 @@ function renderContent(content: string): ReactNode[] {
 function AdjacentCard({
   post,
   direction,
+  t,
 }: {
   post: Pick<BlogPost, 'title' | 'slug'> | null
   direction: 'prev' | 'next'
+  t: Dictionary
 }) {
   if (!post) return <div aria-hidden="true" />
 
@@ -155,11 +159,11 @@ function AdjacentCard({
       >
         {isPrev ? (
           <>
-            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Article précédent
+            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> {t.blog.prevArticle}
           </>
         ) : (
           <>
-            Article suivant <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            {t.blog.nextArticle} <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </>
         )}
       </span>
@@ -179,6 +183,7 @@ function AdjacentCard({
 
 export default async function BlogPostPage({ params }: { params: Params }) {
   const { slug } = await params
+  const { lang, t } = await getT()
 
   // Dégradation douce : 404 si la table n'existe pas encore ou en cas d'erreur
   let post: BlogPost | null = null
@@ -238,10 +243,10 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           {/* Fil d'ariane */}
           <nav
             className="mb-8 flex items-center gap-1.5 text-sm text-muted"
-            aria-label="Fil d'ariane"
+            aria-label={t.blog.breadcrumb}
           >
             <Link href="/blog" className="font-semibold transition-colors hover:text-blue-600">
-              Blog
+              {t.nav.links.blog}
             </Link>
             <ChevronRight className="h-4 w-4" aria-hidden="true" />
             <span className="truncate text-slate-500">{post.title}</span>
@@ -279,11 +284,11 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             </span>
             <span className="inline-flex items-center gap-1.5">
               <CalendarDays className="h-4 w-4 text-blue-600" aria-hidden="true" />
-              {formatDate(post.published_at)}
+              {formatDate(post.published_at, lang)}
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Clock className="h-4 w-4 text-blue-600" aria-hidden="true" />
-              {minutes} min de lecture
+              {t.blog.readingTime(minutes)}
             </span>
           </div>
         </article>
@@ -311,7 +316,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             {post.content ? (
               renderContent(post.content)
             ) : (
-              <p className="mt-8 text-muted">Cet article n&apos;a pas encore de contenu.</p>
+              <p className="mt-8 text-muted">{t.blog.noContent}</p>
             )}
 
             {/* Tags */}
@@ -334,10 +339,10 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           {(adjacent.prev || adjacent.next) && (
             <nav
               className="reveal mx-auto mt-16 grid max-w-3xl gap-4 sm:grid-cols-2"
-              aria-label="Articles adjacent"
+              aria-label={t.blog.adjacent}
             >
-              <AdjacentCard post={adjacent.prev} direction="prev" />
-              <AdjacentCard post={adjacent.next} direction="next" />
+              <AdjacentCard post={adjacent.prev} direction="prev" t={t} />
+              <AdjacentCard post={adjacent.next} direction="next" t={t} />
             </nav>
           )}
 
@@ -348,7 +353,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 text-sm font-bold text-ink shadow-soft transition-colors hover:border-blue-300 hover:text-blue-700"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Retour au blog
+              {t.blog.backToBlog}
             </Link>
           </div>
         </div>

@@ -5,18 +5,24 @@ import { getPublishedServices } from '@/services/services.service'
 import { getPricingPlansByService } from '@/services/pricing.service'
 import { PricingCard } from '@/components/public/pricing-card'
 import { Reveal } from '@/components/public/reveal'
+import { getT } from '@/lib/i18n/server'
+import { localizeService } from '@/lib/i18n'
 
-export const metadata: Metadata = {
-  title: 'Tarifs',
-  description: 'Consultez nos plans tarifaires transparents pour chaque service.',
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT()
+  return {
+    title: t.nav.links.pricing,
+    description: t.tarifs.metaDescription,
+  }
 }
 
 export default async function TarifsPage() {
+  const { lang, t } = await getT()
   const services = await getPublishedServices()
 
   const servicesWithPlans = await Promise.all(
     services.map(async (svc) => ({
-      service: svc,
+      service: localizeService(svc, t),
       plans: await getPricingPlansByService(svc.id),
     })),
   )
@@ -40,13 +46,14 @@ export default async function TarifsPage() {
         />
         <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
-            — Tarification
+            {t.tarifs.badge}
           </p>
           <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
-            Prix <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">transparents</span>
+            {t.tarifs.title1}{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">{t.tarifs.title2}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            Des plans clairs pour chaque budget. Pas de frais cachés, pas de surprises.
+            {t.tarifs.sub}
           </p>
         </div>
       </section>
@@ -56,7 +63,7 @@ export default async function TarifsPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {filtered.length === 0 ? (
             <div className="rounded-3xl border border-border bg-surface py-20 text-center shadow-soft">
-              <p className="text-lg font-bold text-ink">Les tarifs arrivent bientôt.</p>
+              <p className="text-lg font-bold text-ink">{t.tarifs.empty}</p>
             </div>
           ) : (
             <div className="flex flex-col gap-24">
@@ -68,7 +75,7 @@ export default async function TarifsPage() {
                       {service.title}
                     </p>
                     <h2 className="text-3xl font-extrabold tracking-tight text-ink">
-                      Choisissez votre formule
+                      {t.tarifs.choosePlan}
                     </h2>
                   </div>
                   <div className={`grid gap-8 ${
@@ -78,7 +85,7 @@ export default async function TarifsPage() {
                   }`}>
                     {plans.map((plan, pi) => (
                       <Reveal key={plan.id} delay={pi * 120}>
-                        <PricingCard plan={plan} serviceTitle={service.title} />
+                        <PricingCard plan={plan} serviceTitle={service.title} lang={lang} />
                       </Reveal>
                     ))}
                   </div>                  </Reveal>
@@ -103,24 +110,26 @@ export default async function TarifsPage() {
             />
             <div className="relative">
               <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Besoin d&apos;un <span className="text-blue-200">devis personnalisé</span> ?
+                {t.tarifs.ctaTitle1}{' '}
+                <span className="text-blue-200">{t.tarifs.ctaTitle2}</span>
+                {t.tarifs.ctaTitle3}
               </h2>
               <p className="mx-auto mt-3 max-w-md text-blue-100">
-                Décrivez votre projet et nous vous répondrons sous 24h.
+                {t.tarifs.ctaSub}
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Link
                   href="/contact"
                   className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50"
                 >
-                  Demander un devis
+                  {t.common.requestQuote}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/reserver"
                   className="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-3.5 text-sm font-bold text-white transition-colors hover:bg-white/10"
                 >
-                  Réserver un appel
+                  {t.common.bookCallShort}
                 </Link>
               </div>
             </div>
