@@ -68,8 +68,8 @@ export function Navbar() {
         className={cn(
           'mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 rounded-full border px-4 pl-5 transition-all duration-300',
           scrolled || isOpen
-            ? 'border-border bg-white/90 shadow-soft backdrop-blur-xl'
-            : 'border-transparent bg-white/60 backdrop-blur-md',
+            ? 'border-border bg-white shadow-soft'
+            : 'border-transparent bg-white',
         )}
       >
         {/* Logo */}
@@ -139,9 +139,19 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Menu mobile — carte blanche arrondie */}
+      {/* Rideau sombre derrière le menu mobile — bloque le contenu en dessous */}
       {isOpen && (
-        <div className="mx-auto mt-2 max-h-[calc(100dvh-7rem)] max-w-6xl overflow-y-auto rounded-3xl border border-border bg-white/95 p-3 shadow-soft backdrop-blur-xl md:hidden">
+        <button
+          type="button"
+          aria-label={t.nav.closeMenu}
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 -z-10 cursor-default bg-ink/40 md:hidden"
+        />
+      )}
+
+      {/* Menu mobile — carte blanche opaque */}
+      {isOpen && (
+        <div className="mx-auto mt-2 max-h-[calc(100dvh-7rem)] max-w-6xl overflow-y-auto rounded-3xl border border-border bg-white p-3 shadow-soft md:hidden">
           <ul className="flex flex-col gap-1" role="list">
             {NAV_LINKS.map(({ href, key }) => {
               const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
