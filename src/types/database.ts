@@ -111,6 +111,15 @@ export interface SiteSettings {
   phone: string | null
   calendly_url: string | null
   social_links: SocialLinks
+  /** Espace publicitaire près des articles du blog (migration 005). */
+  ads_enabled: boolean
+  /** ID éditeur AdSense (ca-pub-…) — charge le script de messagerie. */
+  adsense_publisher_id: string | null
+  /** Code HTML de la publicité (encart AdSense, autre réseau…). */
+  ads_code: string | null
+  /** Bannière image + destination. */
+  ads_image_url: string | null
+  ads_image_link: string | null
   updated_at: string
 }
 

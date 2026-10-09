@@ -20,7 +20,7 @@ const SECURITY_HEADERS = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com",
       "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
-      "img-src 'self' data: blob: https://woofxjcanpgnxjuqtrna.supabase.co https://i.pinimg.com https://*.calendly.com",
+      "img-src 'self' data: blob: https: http://localhost:3000 https://woofxjcanpgnxjuqtrna.supabase.co https://i.pinimg.com https://*.calendly.com",
       "frame-src https://calendly.com",
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.calendly.com",
       "font-src 'self' data:",

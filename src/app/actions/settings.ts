@@ -39,6 +39,14 @@ export async function updateSiteSettingsAction(
       linkedin: formData.get('linkedin') ?? '',
       twitter: formData.get('twitter') ?? '',
     },
+    // ── Espace publicitaire ──
+    // Le Switch Radix publie sa valeur via l'input fantôme ("on" quand coché) :
+    // `value="true"` est ajouté dans le formulaire pour rendre l'état explicite.
+    ads_enabled: formData.get('ads_enabled') === 'true',
+    adsense_publisher_id: formData.get('adsense_publisher_id') ?? '',
+    ads_code: formData.get('ads_code') ?? '',
+    ads_image_url: formData.get('ads_image_url') ?? '',
+    ads_image_link: formData.get('ads_image_link') ?? '',
   }
 
   const parsed = siteSettingsSchema.safeParse(raw)
@@ -63,6 +71,14 @@ export async function updateSiteSettingsAction(
     }
   } catch (err) {
     console.error('[updateSiteSettingsAction]', err)
+    // Colonnes de publicité absentes → migration 005 non exécutée
+    if (err instanceof Error && /ads_(enabled|code|image)/.test(err.message)) {
+      return {
+        status: 'error',
+        message:
+          'Colonnes publicité introuvables : exécutez supabase/migrations/005_ads.sql dans le SQL Editor Supabase, puis réessayez.',
+      }
+    }
     return { status: 'error', message: 'Erreur lors de la sauvegarde.' }
   }
 }

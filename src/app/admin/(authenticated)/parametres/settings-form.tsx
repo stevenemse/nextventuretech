@@ -1,10 +1,12 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { updateSiteSettingsAction } from '@/app/actions/settings'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Switch } from '@/components/ui/switch'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { initialActionState } from '@/types/actions'
 import type { SiteSettings } from '@/types/database'
@@ -17,6 +19,8 @@ export function SettingsForm({ settings }: Props) {
     updateSiteSettingsAction, initialActionState,
   )
   const fe = state.status === 'error' ? (state.fieldErrors ?? {}) : {}
+  const [adsEnabled, setAdsEnabled] = useState(settings?.ads_enabled ?? false)
+
   const s = settings?.social_links ?? {}
 
   return (
@@ -81,6 +85,73 @@ export function SettingsForm({ settings }: Props) {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Publicité */}
+      <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4 sm:p-5">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">Publicité</h3>
+            <p className="mt-1 text-sm text-slate-500">Afficher une bannière publicitaire à côté des articles du blog.</p>
+          </div>
+          <Switch
+            id="ads_enabled"
+            name="ads_enabled"
+            value="true"
+            checked={adsEnabled}
+            onCheckedChange={setAdsEnabled}
+            aria-label="Activer l'espace publicitaire"
+          />
+        </div>
+        {adsEnabled && (
+          <div className="mt-4 grid gap-4">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="adsense_publisher_id">ID éditeur Google AdSense</Label>
+              <Input
+                id="adsense_publisher_id"
+                name="adsense_publisher_id"
+                defaultValue={settings?.adsense_publisher_id ?? ''}
+                placeholder="ca-pub-1234567890123456"
+                error={fe['adsense_publisher_id']?.[0]}
+              />
+              <p className="text-xs text-slate-500">Charge le script AdSense près des articles.</p>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="ads_code">Code HTML de la publicité</Label>
+              <Textarea
+                id="ads_code"
+                name="ads_code"
+                rows={4}
+                defaultValue={settings?.ads_code ?? ''}
+                placeholder="<ins class='adsbygoogle' …></ins>"
+                error={fe['ads_code']?.[0]}
+              />
+              <p className="text-xs text-slate-500">Seule l’image ci-dessous s’affichera si ce champ est vide.</p>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="ads_image_url">Image publicitaire (URL)</Label>
+              <Input
+                id="ads_image_url"
+                name="ads_image_url"
+                type="url"
+                defaultValue={settings?.ads_image_url ?? ''}
+                placeholder="https://…/banniere.png"
+                error={fe['ads_image_url']?.[0]}
+              />
+              <p className="text-xs text-slate-500">Format conseillé : 300×250.</p>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="ads_image_link">Lien de l’image publicitaire</Label>
+              <Input
+                id="ads_image_link"
+                name="ads_image_link"
+                type="url"
+                defaultValue={settings?.ads_image_link ?? ''}
+                placeholder="https://…"
+              />
+            </div>
+          </div>
+        )}
       </section>
 
       <div>

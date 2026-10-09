@@ -62,3 +62,22 @@ export async function getOptionalUser() {
   } = await supabase.auth.getUser()
   return user
 }
+
+/**
+ * Vérifie le rôle admin SANS redirection (usage côté rendu public).
+ */
+export async function isAdminUser(): Promise<boolean> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return false
+
+  const { data: role } = await supabase
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', user.id)
+    .single()
+
+  return role?.role === 'admin'
+}

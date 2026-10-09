@@ -60,6 +60,8 @@ Exécuter les migrations dans l'ordre dans **SQL Editor** :
 | `supabase/migrations/001_schema.sql` | Tables + index + triggers |
 | `supabase/migrations/002_rls.sql` | RLS + fonction `is_admin()` + policies |
 | `supabase/migrations/003_storage.sql` | Bucket images + policies storage |
+| `supabase/migrations/004_blog.sql` | Tables blog (articles, tables de liaison) |
+| `supabase/migrations/005_ads.sql` | Colonnes espace publicitaire (`site_settings`) |
 | `supabase/seed/003_seed.sql` | Données initiales (services, tarifs, réalisations…) |
 | `supabase/seed/004_admin_setup.sql` | Créer le compte admin |
 

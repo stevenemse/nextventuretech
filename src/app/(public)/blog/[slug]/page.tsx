@@ -21,6 +21,9 @@ import { JsonLd } from '@/components/seo/json-ld'
 import { siteConfig } from '@/config/site'
 import { getT } from '@/lib/i18n/server'
 import type { Dictionary } from '@/lib/i18n'
+import { AdSlot } from '@/components/public/ad-slot'
+import { BlogEditBar } from '@/components/admin/blog-edit-bar'
+import { isAdminUser } from '@/lib/auth/guards'
 
 type Params = Promise<{ slug: string }>
 
@@ -187,8 +190,12 @@ export default async function BlogPostPage({ params }: { params: Params }) {
 
   // Dégradation douce : 404 si la table n'existe pas encore ou en cas d'erreur
   let post: BlogPost | null = null
+  let isAdmin = false
   try {
-    post = await getPublishedPostBySlug(slug)
+    ;[post, isAdmin] = await Promise.all([
+      getPublishedPostBySlug(slug),
+      isAdminUser(),
+    ])
   } catch (error) {
     console.error('BlogPostPage:', error)
   }
@@ -297,8 +304,10 @@ export default async function BlogPostPage({ params }: { params: Params }) {
       {/* Corps */}
       <section className="pb-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          {/* Couverture */}
-          <div className="reveal relative aspect-[16/9] overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-600 to-indigo-800 shadow-card">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+            <div className="min-w-0">
+            {/* Couverture */}
+            <div className="reveal relative aspect-[16/9] overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-600 to-indigo-800 shadow-card">
             {post.cover_image_url && (
               <Image
                 src={post.cover_image_url}
@@ -335,29 +344,40 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             )}
           </div>
 
-          {/* Navigation précédent / suivant */}
-          {(adjacent.prev || adjacent.next) && (
-            <nav
-              className="reveal mx-auto mt-16 grid max-w-3xl gap-4 sm:grid-cols-2"
-              aria-label={t.blog.adjacent}
-            >
-              <AdjacentCard post={adjacent.prev} direction="prev" t={t} />
-              <AdjacentCard post={adjacent.next} direction="next" t={t} />
-            </nav>
-          )}
+            {/* Navigation précédent / suivant */}
+            {(adjacent.prev || adjacent.next) && (
+              <nav
+                className="reveal mx-auto mt-16 grid gap-4 sm:grid-cols-2"
+                aria-label={t.blog.adjacent}
+              >
+                <AdjacentCard post={adjacent.prev} direction="prev" t={t} />
+                <AdjacentCard post={adjacent.next} direction="next" t={t} />
+              </nav>
+            )}
 
-          {/* Retour blog */}
-          <div className="mt-14 text-center">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 text-sm font-bold text-ink shadow-soft transition-colors hover:border-blue-300 hover:text-blue-700"
-            >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              {t.blog.backToBlog}
-            </Link>
+            {/* Retour blog */}
+            <div className="mt-14 text-center">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 text-sm font-bold text-ink shadow-soft transition-colors hover:border-blue-300 hover:text-blue-700"
+              >
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                {t.blog.backToBlog}
+              </Link>
+            </div>
+            </div>
+
+            {/* Colonne latérale : publicité près de l'article */}
+            <aside className="lg:pt-4">
+              <div className="lg:sticky lg:top-24">
+                <AdSlot />
+              </div>
+            </aside>
           </div>
         </div>
       </section>
+
+      {isAdmin && <BlogEditBar postId={post.id} />}
     </>
   )
 }

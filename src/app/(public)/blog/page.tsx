@@ -7,6 +7,9 @@ import type { BlogPost } from '@/types/database'
 import { cn } from '@/lib/utils/cn'
 import { getT } from '@/lib/i18n/server'
 import type { Lang, Dictionary } from '@/lib/i18n'
+import { AdSlot } from '@/components/public/ad-slot'
+import { BlogEditBar } from '@/components/admin/blog-edit-bar'
+import { isAdminUser } from '@/lib/auth/guards'
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getT()
@@ -144,10 +147,12 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
   // Dégradation douce si la table n'existe pas encore (migration non exécutée)
   let posts: BlogPost[] = []
   let categories: string[] = []
+  let isAdmin = false
   try {
-    ;[posts, categories] = await Promise.all([
+    ;[posts, categories, isAdmin] = await Promise.all([
       getPublishedPosts(categorie ? { category: categorie } : undefined),
       getPublishedCategories(),
+      isAdminUser(),
     ])
   } catch (error) {
     console.error('BlogPage:', error)
@@ -254,8 +259,17 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
               )}
             </div>
           )}
+
+          {/* Espace publicitaire près des articles */}
+          <div className="reveal mt-10 flex justify-center">
+            <div className="grid w-full max-w-md lg:max-w-sm">
+              <AdSlot />
+            </div>
+          </div>
         </div>
       </section>
+
+      {isAdmin && <BlogEditBar />}
     </>
   )
 }

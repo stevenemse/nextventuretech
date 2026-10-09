@@ -24,6 +24,17 @@ export const siteSettingsSchema = z.object({
     linkedin: z.string().url('URL invalide').optional().or(z.literal('')),
     twitter: z.string().url('URL invalide').optional().or(z.literal('')),
   }),
+  // ── Espace publicitaire (blog) ──
+  ads_enabled: z.boolean().default(false),
+  adsense_publisher_id: z
+    .string()
+    .trim()
+    .max(60, "ID éditeur trop long (ex. ca-pub-1234567890123456)")
+    .optional()
+    .or(z.literal('')),
+  ads_code: z.string().max(10000, 'Code HTML trop long').optional().or(z.literal('')),
+  ads_image_url: z.string().url('URL invalide').optional().or(z.literal('')),
+  ads_image_link: z.string().url('URL invalide').optional().or(z.literal('')),
 })
 
 export type SiteSettingsFormData = z.infer<typeof siteSettingsSchema>
