@@ -18,9 +18,6 @@
   --color-warning: #d97706;
   --color-error: #dc2626;
 
-  /* Ombres signature */
-  --shadow-soft: 0 1px 2px rgb(10 15 30 / 0.04), 0 16px 40px -16px rgb(10 15 30 / 0.10);
-  --shadow-card: 0 2px 4px rgb(10 15 30 / 0.05), 0 32px 64px -32px rgb(43 92 246 / 0.28);
   --shadow-glow: 0 0 0 1px rgb(255 255 255 / 0.08) inset, 0 24px 80px -24px rgb(43 92 246 / 0.55);
 }
 
@@ -35,6 +32,18 @@
   --shadow-soft: var(--shadow-soft);
   --shadow-card: var(--shadow-card);
   --shadow-glow: var(--shadow-glow);
+
+  /*
+   * Rayons sémantiques — NOUVELLE échelle (remplace les défauts Tailwind).
+   * Définir ici écrase les valeurs par défaut de Tailwind pour TOUT le site :
+   * rounded-md=1rem, rounded-lg=1.5rem, rounded-xl=2rem, rounded-2xl=2.5rem became
+   * fin des rounded-[1.75rem]/[2rem]/[2.5rem] arbitraires éparées dans le code.
+   */
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-2xl: 2.5rem;
+  --radius-3xl: 3rem;
 }
 
 /* ─── Base ─────────────────────────────────────────────────────────── */

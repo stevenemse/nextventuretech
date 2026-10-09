@@ -33,12 +33,12 @@ export async function AdSlot({ className }: { className?: string }) {
   return (
     <aside
       className={cn(
-        'overflow-hidden rounded-[1.75rem] border border-border bg-surface p-5 shadow-soft',
+        'overflow-hidden rounded-xl border border-border bg-surface p-5 shadow-soft',
         className,
       )}
       aria-label="Publicité"
     >
-      <p className="mb-3 text-[0.65rem] font-bold uppercase tracking-widest text-muted">
+      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-muted">
         Publicité
       </p>
 

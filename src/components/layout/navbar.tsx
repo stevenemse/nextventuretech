@@ -34,7 +34,7 @@ function LanguageSwitch() {
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
           className={cn(
-            'rounded-full px-2.5 py-1 text-[11px] font-extrabold tracking-wide transition-colors',
+            'rounded-full px-2.5 py-1 text-xs font-extrabold tracking-wide transition-colors',
             lang === l
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-slate-500 hover:text-ink',

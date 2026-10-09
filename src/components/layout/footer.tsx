@@ -34,7 +34,7 @@ export async function Footer() {
     <footer className="rounded-t-[2.5rem] bg-ink text-slate-400" aria-label={t.footer.label}>
       <div className="mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 lg:px-8">
         {/* ─── Bandeau CTA ─────────────────────────────────── */}
-        <div className="relative mb-16 overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-12 text-center shadow-glow sm:px-12">
+        <div className="relative mb-16 overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-12 text-center shadow-glow sm:px-12">
           <div
             className="absolute inset-0 opacity-[0.12]"
             style={{

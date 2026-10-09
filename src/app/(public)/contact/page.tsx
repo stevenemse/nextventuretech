@@ -106,7 +106,7 @@ export default async function ContactPage({ searchParams }: Props) {
 
             {/* Formulaire — prérempli si l'utilisateur vient d'un service ou d'un plan tarifaire */}
             <div className="lg:col-span-3">
-              <div className="rounded-[2rem] border border-border bg-surface p-6 shadow-soft sm:p-9">
+              <div className="rounded-xl border border-border bg-surface p-6 shadow-soft sm:p-9">
                 <h2 className="mb-7 text-2xl font-extrabold tracking-tight text-ink">
                   {t.contact.formTitle}
                 </h2>

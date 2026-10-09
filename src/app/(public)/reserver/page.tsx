@@ -101,7 +101,7 @@ export default async function ReserverPage() {
 
             {/* Widget Calendly ou fallback */}
             <div className="lg:col-span-3">
-              <div className="overflow-hidden rounded-[2rem] border border-border bg-surface p-2 shadow-soft sm:p-4">
+              <div className="overflow-hidden rounded-xl border border-border bg-surface p-2 shadow-soft sm:p-4">
                 {calendlyUrl ? (
                   <CalendlyWidget url={calendlyUrl} />
                 ) : (

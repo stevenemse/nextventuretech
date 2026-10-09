@@ -36,7 +36,7 @@ function PostCard({ post, t, lang }: { post: BlogPost; t: Dictionary; lang: Lang
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-border bg-surface shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card"
+      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card"
     >
       {/* Couverture */}
       <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-800">
@@ -92,7 +92,7 @@ function FeaturedPost({ post, t, lang }: { post: BlogPost; t: Dictionary; lang: 
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group grid overflow-hidden rounded-[2rem] border border-border bg-surface shadow-soft transition-shadow duration-300 hover:shadow-card lg:grid-cols-2"
+      className="group grid overflow-hidden rounded-xl border border-border bg-surface shadow-soft transition-shadow duration-300 hover:shadow-card lg:grid-cols-2"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-800 lg:aspect-auto lg:min-h-[22rem]">
         {post.cover_image_url && (
@@ -228,7 +228,7 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
 
           {posts.length === 0 ? (
             /* État vide */
-            <div className="reveal mx-auto max-w-xl rounded-[2rem] border border-dashed border-blue-200 bg-white/60 p-14 text-center">
+            <div className="reveal mx-auto max-w-xl rounded-xl border border-dashed border-blue-200 bg-white/60 p-14 text-center">
               <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-glow">
                 <Newspaper className="h-6 w-6" aria-hidden="true" />
               </span>

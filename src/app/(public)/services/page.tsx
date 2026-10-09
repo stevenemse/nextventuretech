@@ -124,7 +124,7 @@ export default async function ServicesPage() {
                     {/* Visuel */}
                   <div className="w-full flex-1">
                     <div
-                      className={`relative aspect-[4/3] overflow-hidden rounded-[2.5rem] bg-gradient-to-br ${VISUAL_GRADIENTS[i % VISUAL_GRADIENTS.length]} p-8 shadow-glow`}
+                      className={`relative aspect-[4/3] overflow-hidden rounded-2xl bg-gradient-to-br ${VISUAL_GRADIENTS[i % VISUAL_GRADIENTS.length]} p-8 shadow-glow`}
                     >
                       <div
                         className="absolute inset-0 opacity-[0.14]"
@@ -204,7 +204,7 @@ export default async function ServicesPage() {
       {/* CTA */}
       <section className="pb-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 text-center shadow-glow">
+          <Reveal className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 text-center shadow-glow">
             <div
               className="absolute inset-0 opacity-[0.12]"
               style={{

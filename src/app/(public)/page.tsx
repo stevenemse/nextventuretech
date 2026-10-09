@@ -125,7 +125,7 @@ export default async function HomePage() {
                   >
                     <path
                       d="M2 6 Q 60 -2 118 5"
-                      stroke="#2b5cf6"
+                      className="stroke-[var(--color-primary)]"
                       strokeWidth="3"
                       strokeLinecap="round"
                       fill="none"
@@ -179,11 +179,11 @@ export default async function HomePage() {
             {/* ── Visuel droite — cartes superposées ── */}
             <div className="relative hidden lg:block" aria-hidden="true">
               {/* Couches arrière */}
-              <div className="absolute -right-8 -top-10 h-full w-full rotate-6 rounded-[2.5rem] bg-gradient-to-br from-blue-200 to-indigo-200" />
-              <div className="absolute -left-5 -top-4 h-full w-full -rotate-3 rounded-[2.5rem] bg-gradient-to-br from-indigo-100 to-white shadow-soft" />
+              <div className="absolute -right-8 -top-10 h-full w-full rotate-6 rounded-2xl bg-gradient-to-br from-blue-200 to-indigo-200" />
+              <div className="absolute -left-5 -top-4 h-full w-full -rotate-3 rounded-2xl bg-gradient-to-br from-indigo-100 to-white shadow-soft" />
 
               {/* Carte principale */}
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 p-9 shadow-glow">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 p-9 shadow-glow">
                 <div
                   className="absolute inset-0 opacity-[0.14]"
                   style={{
@@ -305,7 +305,7 @@ export default async function HomePage() {
           <div className="grid items-center gap-16 lg:grid-cols-2">
             {/* Texte gauche */}
             <Reveal>
-              <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-background px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
+              <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                 {t.home.aboutBadge}
               </p>
               <h2 id="about-heading" className="text-4xl font-extrabold tracking-tight text-ink">
@@ -348,7 +348,7 @@ export default async function HomePage() {
 
             {/* Visuel droite */}
             <Reveal className="relative">
-              <div className="relative overflow-hidden rounded-[2.5rem] bg-ink p-10 shadow-soft">
+              <div className="relative overflow-hidden rounded-2xl bg-ink p-10 shadow-soft">
                 <div
                   className="absolute inset-0 opacity-[0.08]"
                   style={{
@@ -457,7 +457,7 @@ export default async function HomePage() {
       {/* ─── CTA FINAL ─────────────────────────────────────── */}
       <section className="pb-28 pt-4" aria-label={t.home.ctaSectionLabel}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-6 py-20 text-center shadow-glow sm:px-12">
+          <Reveal className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 text-center shadow-glow sm:px-12">
             <div
               className="absolute inset-0 opacity-[0.12]"
               style={{

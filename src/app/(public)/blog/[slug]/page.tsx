@@ -307,7 +307,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
             <div className="min-w-0">
             {/* Couverture */}
-            <div className="reveal relative aspect-[16/9] overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-600 to-indigo-800 shadow-card">
+            <div className="reveal relative aspect-[16/9] overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 to-indigo-800 shadow-card">
             {post.cover_image_url && (
               <Image
                 src={post.cover_image_url}
