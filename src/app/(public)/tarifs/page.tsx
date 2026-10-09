@@ -74,7 +74,7 @@ export default async function TarifsPage() {
                     <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                       {service.title}
                     </p>
-                    <h2 className="text-3xl font-extrabold tracking-tight text-ink">
+                    <h2 className="text-4xl font-extrabold tracking-tight text-ink">
                       {t.tarifs.choosePlan}
                     </h2>
                   </div>
