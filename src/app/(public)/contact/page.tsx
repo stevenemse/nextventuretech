@@ -61,7 +61,7 @@ export default async function ContactPage({ searchParams }: Props) {
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
             {t.contact.badge}
           </p>
-          <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+          <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-ink sm:text-6xl">
             {t.contact.title1}{' '}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">{t.contact.title2}</span>
           </h1>
@@ -77,15 +77,15 @@ export default async function ContactPage({ searchParams }: Props) {
           <Reveal className="grid gap-10 lg:grid-cols-5">
             {/* Infos contact — cartes 2x2 */}
             <div className="lg:col-span-2">
-              <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-ink">{t.contact.detailsTitle}</h2>
+              <h2 className="mb-6 text-center text-2xl font-extrabold tracking-tight text-ink lg:text-left">{t.contact.detailsTitle}</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 {contactInfo.map(({ icon: Icon, label, value, href }) => (
                   <Reveal
                     key={label}
                     delay={150}
-                    className="min-w-0 rounded-3xl border border-border bg-surface p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
+                    className="min-w-0 rounded-3xl border border-border bg-surface p-5 text-center shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card sm:text-left"
                   >
-                    <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-soft">
+                    <span className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-soft sm:mx-0">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </span>
                     <p className="text-xs font-bold uppercase tracking-wide text-muted">{label}</p>
@@ -107,7 +107,7 @@ export default async function ContactPage({ searchParams }: Props) {
             {/* Formulaire — prérempli si l'utilisateur vient d'un service ou d'un plan tarifaire */}
             <div className="lg:col-span-3">
               <div className="rounded-xl border border-border bg-surface p-6 shadow-soft sm:p-9">
-                <h2 className="mb-7 text-2xl font-extrabold tracking-tight text-ink">
+                <h2 className="mb-7 text-center text-2xl font-extrabold tracking-tight text-ink lg:text-left">
                   {t.contact.formTitle}
                 </h2>
                 <ContactForm

@@ -73,10 +73,10 @@ export async function Footer() {
         </div>
 
         {/* ─── Colonnes ────────────────────────────────────── */}
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 text-center md:grid-cols-2 md:text-left lg:grid-cols-4">
           {/* Marque */}
           <div>
-            <Link href="/" className="mb-4 flex items-center gap-2.5">
+            <Link href="/" className="mb-4 flex items-center justify-center gap-2.5 md:justify-start">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/logo/nextventure-logo-dark.svg"
@@ -95,7 +95,7 @@ export async function Footer() {
           {/* Services */}
           <nav aria-label={t.footer.colServices}>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">{t.footer.colServices}</h3>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col items-center gap-2 md:items-start">
               {t.footer.servicesLinks.map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-sm transition-colors hover:text-blue-400">{label}</Link>
@@ -107,7 +107,7 @@ export async function Footer() {
           {/* Entreprise */}
           <nav aria-label={t.footer.colCompany}>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">{t.footer.colCompany}</h3>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col items-center gap-2 md:items-start">
               {LINKS.company.map(({ href, labelKey }) => (
                 <li key={href}>
                   <Link href={href} className="text-sm transition-colors hover:text-blue-400">{t.nav.links[labelKey]}</Link>
@@ -119,7 +119,7 @@ export async function Footer() {
           {/* Contact */}
           <div>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">{t.footer.colContact}</h3>
-            <address className="flex flex-col gap-3 text-sm not-italic">
+            <address className="flex flex-col items-center gap-3 text-sm not-italic md:items-start">
               <div className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
                 <span>{t.footer.address}</span>
@@ -141,7 +141,7 @@ export async function Footer() {
         </div>
 
         {/* ─── Barre inférieure ────────────────────────────── */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-center sm:flex-row sm:text-left">
           <p className="text-xs">© {new Date().getFullYear()} NextVenture Tech. {t.footer.rights}</p>
           <a
             href={`${waLink}?text=${encodeURIComponent(t.footer.waMessage)}`}

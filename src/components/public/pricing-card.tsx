@@ -43,7 +43,7 @@ export function PricingCard({ plan, serviceTitle, lang = 'fr' }: PricingCardProp
   return (
     <div
       className={cn(
-        'relative flex flex-col rounded-3xl border p-8 transition-all duration-300',
+        'relative flex flex-col rounded-3xl border p-6 text-center transition-all duration-300 sm:p-8 sm:text-left',
         plan.is_popular
           ? 'border-blue-600 bg-gradient-to-b from-blue-600 to-indigo-700 text-white shadow-glow lg:scale-[1.03]'
           : 'border-border bg-surface text-slate-900 shadow-soft hover:-translate-y-1 hover:shadow-card',
@@ -78,7 +78,7 @@ export function PricingCard({ plan, serviceTitle, lang = 'fr' }: PricingCardProp
             {t.pricing.customPrice}
           </p>
         ) : (
-          <div className="flex items-baseline gap-1">
+          <div className="flex items-baseline justify-center gap-1 sm:justify-start">
             <span className={cn('text-3xl font-extrabold tabular-nums', plan.is_popular ? 'text-white' : 'text-slate-900')}>
               {plan.price != null ? formatPrice(plan.price, lang) : ''}
             </span>
@@ -93,7 +93,7 @@ export function PricingCard({ plan, serviceTitle, lang = 'fr' }: PricingCardProp
       {plan.features.length > 0 && (
         <ul className="mb-8 flex flex-col gap-2.5">
           {plan.features.map((f) => (
-            <li key={f} className="flex items-start gap-2 text-sm">
+            <li key={f} className="flex items-start justify-center gap-2 text-left text-sm sm:justify-start">
               <Check
                 className={cn('mt-0.5 h-4 w-4 shrink-0', plan.is_popular ? 'text-white' : 'text-blue-600')}
                 aria-hidden="true"

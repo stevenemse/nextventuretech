@@ -160,7 +160,7 @@ export function Navbar() {
                   <Link
                     href={href}
                     className={cn(
-                      'block rounded-2xl px-4 py-3 text-base font-medium transition-colors',
+                      'block rounded-2xl px-4 py-3 text-center text-base font-medium transition-colors',
                       isActive
                         ? 'bg-blue-600/10 font-semibold text-blue-700'
                         : 'text-slate-600 hover:bg-slate-100 hover:text-ink',

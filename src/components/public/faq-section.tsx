@@ -11,13 +11,13 @@ export function FaqSection() {
   const FAQ_ITEMS = t.faq.items
 
   return (
-    <section className="bg-surface py-24" aria-labelledby="faq-heading">
+    <section className="bg-surface py-16 sm:py-24" aria-labelledby="faq-heading">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="reveal mb-14 text-center">
           <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
             {t.faq.badge}
           </p>
-          <h2 id="faq-heading" className="text-4xl font-extrabold tracking-tight text-ink">
+          <h2 id="faq-heading" className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
             {t.faq.title1} <span className="text-blue-600">{t.faq.title2}</span>
           </h2>
           <p className="mx-auto mt-4 max-w-md text-muted">{t.faq.subtitle}</p>

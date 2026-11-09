@@ -105,14 +105,14 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             {/* ── Texte gauche ── */}
-            <div className="animate-fade-in-up">
+            <div className="animate-fade-in-up text-center lg:text-left">
               {/* Badge */}
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-blue-600" aria-hidden="true" />
                 {t.home.badge}
               </div>
 
-              <h1 className="text-5xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-6xl lg:text-[4.25rem]">
+              <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-ink sm:text-6xl sm:leading-[1.05] lg:text-[4.25rem]">
                 {t.home.h1Pre}{' '}
                 <span className="relative inline-block bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
                   {t.home.h1Highlight}
@@ -136,11 +136,11 @@ export default async function HomePage() {
                 .
               </h1>
 
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted">
+              <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-muted sm:text-lg lg:mx-0">
                 {t.home.heroSub}
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
                 <Link
                   href="/reserver"
                   className="group inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"
@@ -161,7 +161,7 @@ export default async function HomePage() {
 
               {/* Stats — style NovaWave avec séparateurs */}
               {stats.length > 0 && (
-                <dl className="mt-14 grid grid-cols-2 gap-y-8 sm:grid-cols-4">
+                <dl className="mt-14 grid grid-cols-2 gap-y-8 text-center sm:grid-cols-4 sm:text-left">
                   {stats.slice(0, 4).map((stat, i) => (
                     <div key={stat.id} className={i > 0 ? 'sm:border-l sm:border-border sm:pl-6' : ''}>
                       <dd className="text-3xl font-extrabold tabular-nums tracking-tight text-ink sm:text-4xl">
@@ -241,21 +241,21 @@ export default async function HomePage() {
 
       {/* ─── SERVICES ──────────────────────────────────────── */}
       {services.length > 0 && (
-        <section className="py-24" aria-labelledby="services-heading">
+        <section className="py-16 sm:py-24" aria-labelledby="services-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6">
+            <Reveal className="mb-12 flex flex-wrap items-center justify-center gap-6 text-center sm:mb-14 sm:items-end sm:justify-between sm:text-left">
               <div>
                 <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                   {t.home.servicesBadge}
                 </p>
-                <h2 id="services-heading" className="text-4xl font-extrabold tracking-tight text-ink">
+                <h2 id="services-heading" className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
                   {t.home.servicesTitle1}{' '}
                   <span className="text-blue-600">{t.home.servicesTitle2}</span>
                 </h2>
               </div>
               <Link
                 href="/services"
-                className="group hidden items-center gap-1.5 text-sm font-bold text-blue-600 transition-colors hover:text-blue-700 sm:inline-flex"
+                className="group inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 transition-colors hover:text-blue-700"
               >
                 {t.home.seeAllServices}
                 <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
@@ -270,7 +270,7 @@ export default async function HomePage() {
                   <Reveal
                     key={svc.id}
                     delay={(i % 3) * 100}
-                    className="group flex flex-col rounded-3xl border border-border bg-surface p-7 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card"
+                    className="group flex flex-col items-center rounded-3xl border border-border bg-surface p-6 text-center shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card sm:items-start sm:p-7 sm:text-left"
                   >
                     <span
                       className={`mb-5 flex h-13 w-13 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} p-3.5 text-white shadow-soft`}
@@ -300,21 +300,21 @@ export default async function HomePage() {
       )}
 
       {/* ─── ABOUT ─────────────────────────────────────────── */}
-      <section className="bg-surface py-24" aria-labelledby="about-heading">
+      <section className="bg-surface py-16 sm:py-24" aria-labelledby="about-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             {/* Texte gauche */}
-            <Reveal>
+            <Reveal className="text-center lg:text-left">
               <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                 {t.home.aboutBadge}
               </p>
-              <h2 id="about-heading" className="text-4xl font-extrabold tracking-tight text-ink">
+              <h2 id="about-heading" className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
                 {t.home.aboutTitle1}{' '}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
                   {t.home.aboutTitle2}
                 </span>
               </h2>
-              <p className="mt-5 leading-relaxed text-muted">{t.home.aboutText}</p>
+              <p className="mx-auto mt-5 max-w-lg leading-relaxed text-muted lg:mx-0 lg:max-w-none">{t.home.aboutText}</p>
 
               {/* Cartes valeurs */}
               <div className="mt-9 grid gap-4 sm:grid-cols-2">
@@ -323,7 +323,7 @@ export default async function HomePage() {
                   return (
                     <div
                       key={title}
-                      className="flex items-start gap-3.5 rounded-2xl border border-border bg-background p-4 transition-colors hover:border-blue-200"
+                      className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-background p-4 text-center transition-colors hover:border-blue-200 sm:flex-row sm:items-start sm:gap-3.5 sm:text-left"
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-soft">
                         <Icon className="h-5 w-5" aria-hidden="true" />
@@ -386,7 +386,7 @@ export default async function HomePage() {
 
               {/* Mini-stats flottantes issues de la base */}
               {stats.length > 1 && (
-                <div className="absolute -bottom-6 left-8 flex items-center gap-3 rounded-2xl border border-border bg-white p-4 shadow-card">
+                <div className="absolute -bottom-6 left-8 hidden items-center gap-3 rounded-2xl border border-border bg-white p-4 shadow-card sm:flex">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600/10 text-blue-600">
                     <Check className="h-5 w-5" aria-hidden="true" />
                   </span>
@@ -401,7 +401,7 @@ export default async function HomePage() {
                 </div>
               )}
               {stats.length > 2 && (
-                <div className="absolute -top-6 right-8 rounded-2xl border border-border bg-white px-5 py-3 text-center shadow-card">
+                <div className="absolute -top-6 right-8 hidden rounded-2xl border border-border bg-white px-5 py-3 text-center shadow-card sm:block">
                   <p className="text-lg font-extrabold text-blue-600">
                     <CountUp value={stats[2]?.value ?? ''} />
                   </p>
@@ -417,13 +417,13 @@ export default async function HomePage() {
 
       {/* ─── RÉALISATIONS ──────────────────────────────────── */}
       {works.length > 0 && (
-        <section className="py-24" aria-labelledby="works-heading">
+        <section className="py-16 sm:py-24" aria-labelledby="works-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal className="mb-14 text-center">
               <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                 {t.home.worksBadge}
               </p>
-              <h2 id="works-heading" className="mx-auto max-w-2xl text-4xl font-extrabold tracking-tight text-ink">
+              <h2 id="works-heading" className="mx-auto max-w-2xl text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
                 {t.home.worksTitle1}{' '}
                 <span className="text-blue-600">{t.home.worksTitle2}</span>
               </h2>
@@ -455,7 +455,7 @@ export default async function HomePage() {
       <FaqSection />
 
       {/* ─── CTA FINAL ─────────────────────────────────────── */}
-      <section className="pb-28 pt-4" aria-label={t.home.ctaSectionLabel}>
+      <section className="pb-20 pt-4 sm:pb-28" aria-label={t.home.ctaSectionLabel}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 text-center shadow-glow sm:px-12">
             <div
@@ -473,7 +473,7 @@ export default async function HomePage() {
               <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-100 backdrop-blur">
                 {t.home.ctaBadge}
               </p>
-              <h2 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
                 {t.home.ctaTitle1}{' '}
                 <span className="text-blue-200">{t.home.ctaTitle2}</span>
                 {t.home.ctaTitle3}

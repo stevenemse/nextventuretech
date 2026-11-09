@@ -57,7 +57,7 @@ function PostCard({ post, t, lang }: { post: BlogPost; t: Dictionary; lang: Lang
       </div>
 
       {/* Contenu */}
-      <div className="flex flex-1 flex-col p-6">
+      <div className="flex flex-1 flex-col items-center p-6 text-center sm:items-start sm:text-left">
         <div className="mb-3 flex items-center gap-4 text-xs text-muted">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
@@ -109,7 +109,7 @@ function FeaturedPost({ post, t, lang }: { post: BlogPost; t: Dictionary; lang: 
         </span>
       </div>
 
-      <div className="flex flex-col justify-center p-7 sm:p-10">
+      <div className="flex flex-col items-center justify-center p-7 text-center sm:p-10 lg:items-start lg:text-left">
         {post.category && (
           <span className="mb-4 inline-flex w-fit rounded-full border border-blue-200/70 bg-blue-600/5 px-3 py-1 text-xs font-bold uppercase tracking-wide text-blue-700">
             {post.category}
@@ -180,7 +180,7 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
             {t.blog.badge}
           </p>
-          <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+          <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-ink sm:text-6xl">
             {t.blog.title1}{' '}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
               {t.blog.title2}

@@ -40,7 +40,7 @@ export default async function ReserverPage() {
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
             {t.reserver.badge}
           </p>
-          <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+          <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-ink sm:text-6xl">
             {t.reserver.title1}{' '}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">{t.reserver.title2}</span>
           </h1>
@@ -56,7 +56,7 @@ export default async function ReserverPage() {
           <div className="reveal grid gap-10 lg:grid-cols-5">
             {/* Avantages */}
             <div className="lg:col-span-2">
-              <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-ink">
+              <h2 className="mb-6 text-center text-2xl font-extrabold tracking-tight text-ink lg:text-left">
                 {t.reserver.benefitsTitle}
               </h2>
               <ul className="mb-8 flex flex-col gap-3">
@@ -82,7 +82,7 @@ export default async function ReserverPage() {
                   }}
                   aria-hidden="true"
                 />
-                <div className="relative">
+                <div className="relative text-center lg:text-left">
                   <p className="text-base font-extrabold text-white">{t.reserver.immediateTitle}</p>
                   <p className="mt-1 text-sm leading-relaxed text-blue-100">
                     {t.reserver.immediateText}

@@ -56,6 +56,10 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Décors absolus (halos, ondes) : jamais de scroll horizontal */
+  overflow-x: hidden;
+  /* Ancres (#service) sous la navbar fixe */
+  scroll-padding-top: 6rem;
 }
 
 body {

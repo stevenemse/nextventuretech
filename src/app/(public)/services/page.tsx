@@ -93,7 +93,7 @@ export default async function ServicesPage() {
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
             {t.services.badge}
           </p>
-          <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+          <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-ink sm:text-6xl">
             {t.services.title1}{' '}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">{t.services.title2}</span>
           </h1>
@@ -104,9 +104,9 @@ export default async function ServicesPage() {
       </section>
 
       {/* Rangées de services */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-28">
+          <div className="flex flex-col gap-16 sm:gap-28">
             {services.map((svc, i) => {
               const Icon = ICON_MAP[svc.icon ?? ''] ?? Sparkles
               const isEven = i % 2 === 0
@@ -148,16 +148,16 @@ export default async function ServicesPage() {
                   </div>
 
                   {/* Contenu */}
-                  <div className="flex-1">
+                  <div className="flex-1 text-center md:text-left">
                     <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                       {t.services.numberBadge(i + 1)}
                     </div>
-                    <h2 className="text-4xl font-extrabold tracking-tight text-ink">{svc.title}</h2>
+                    <h2 className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">{svc.title}</h2>
                     {svc.description && (
-                      <p className="mt-5 leading-relaxed text-muted">{svc.description}</p>
+                      <p className="mx-auto mt-5 max-w-md leading-relaxed text-muted md:mx-0 md:max-w-none">{svc.description}</p>
                     )}
                     {svc.key_points.length > 0 && (
-                      <ul className="mt-7 flex flex-col gap-3">
+                      <ul className="mx-auto mt-7 flex w-fit max-w-full flex-col gap-3 text-left md:mx-0">
                         {svc.key_points.map((point) => (
                           <li key={point} className="flex items-start gap-3 text-sm font-medium text-slate-700">
                             <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600/10">
@@ -168,7 +168,7 @@ export default async function ServicesPage() {
                         ))}
                       </ul>
                     )}
-                    <div className="mt-9 flex flex-wrap gap-3">
+                    <div className="mt-9 flex flex-wrap justify-center gap-3 md:justify-start">
                       <Link
                         href={`/tarifs#${svc.slug}`}
                         className="group inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-card"

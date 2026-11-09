@@ -48,7 +48,7 @@ export default async function TarifsPage() {
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
             {t.tarifs.badge}
           </p>
-          <h1 className="mx-auto max-w-3xl text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+          <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-ink sm:text-6xl">
             {t.tarifs.title1}{' '}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">{t.tarifs.title2}</span>
           </h1>
@@ -59,14 +59,14 @@ export default async function TarifsPage() {
       </section>
 
       {/* Plans par service */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {filtered.length === 0 ? (
             <div className="rounded-3xl border border-border bg-surface py-20 text-center shadow-soft">
               <p className="text-lg font-bold text-ink">{t.tarifs.empty}</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-24">
+            <div className="flex flex-col gap-16 sm:gap-24">
               {filtered.map(({ service, plans }) => (
                 <div key={service.id} id={service.slug} className="scroll-mt-28">
                   <Reveal>
@@ -74,7 +74,7 @@ export default async function TarifsPage() {
                     <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 shadow-soft">
                       {service.title}
                     </p>
-                    <h2 className="text-4xl font-extrabold tracking-tight text-ink">
+                    <h2 className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
                       {t.tarifs.choosePlan}
                     </h2>
                   </div>
