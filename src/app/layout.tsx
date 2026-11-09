@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Manrope } from 'next/font/google'
 import './globals.css'
 import { siteConfig } from '@/config/site'
+import { getLang } from '@/lib/i18n/server'
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -64,13 +65,17 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // La langue du document suit le cookie FR/EN : lecteurs d'écran et moteurs
+  // de recherche reçoivent la bonne langue dès le HTML initial, sans JS.
+  const lang = await getLang()
+
   return (
-    <html lang="fr" className={`${manrope.variable} js`} suppressHydrationWarning>
+    <html lang={lang} className={`${manrope.variable} js`} suppressHydrationWarning>
       <body>{children}</body>
     </html>
   )

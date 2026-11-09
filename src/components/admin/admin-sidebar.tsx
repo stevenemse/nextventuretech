@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Newspaper,
+  BarChart3,
 } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { signOutAction } from '@/app/actions/auth'
@@ -24,6 +25,7 @@ const navItems = [
   { href: '/admin/realisations', label: 'Réalisations',  icon: BriefcaseBusiness },
   { href: '/admin/tarifs',       label: 'Tarifs',        icon: Tag },
   { href: '/admin/blog',         label: 'Articles',      icon: Newspaper },
+  { href: '/admin/analytics',    label: 'Trafic',        icon: BarChart3 },
   { href: '/admin/parametres',   label: 'Paramètres',    icon: Settings },
 ]
 

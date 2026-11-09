@@ -8,6 +8,7 @@ import { getPublishedServices } from '@/services/services.service'
 import { buildWhatsAppUrl } from '@/lib/utils/whatsapp'
 import { getT } from '@/lib/i18n/server'
 import { localizeService } from '@/lib/i18n'
+import { notifyNewContactRequest } from '@/lib/email/contact-notification'
 import type { ActionResult } from '@/types/actions'
 
 export interface ContactActionData {
@@ -114,6 +115,22 @@ export async function submitContactForm(
     } catch {
       // best-effort — le message WhatsApp reste utile sans le titre
     }
+  }
+
+  // Notification email — best-effort : la demande est déjà en base, un échec
+  // d'envoi ne doit jamais faire échouer le formulaire.
+  try {
+    await notifyNewContactRequest({
+      name: input.name,
+      email: input.email,
+      phone: input.phone ?? null,
+      company: input.company ?? null,
+      service: serviceName ?? null,
+      budget: input.budget ?? null,
+      message: input.message,
+    })
+  } catch (err) {
+    console.error('[submitContactForm] notification:', err)
   }
 
   const whatsappUrl = buildWhatsAppUrl({

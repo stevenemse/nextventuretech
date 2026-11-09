@@ -6,6 +6,7 @@ import { getPublishedServices } from '@/services/services.service'
 import { buildWhatsAppUrl } from '@/lib/utils/whatsapp'
 import { getT } from '@/lib/i18n/server'
 import { localizeService } from '@/lib/i18n'
+import { notifyNewContactRequest } from '@/lib/email/contact-notification'
 
 /**
  * POST /api/contact
@@ -100,6 +101,21 @@ export async function POST(request: NextRequest) {
     } catch {
       // best-effort
     }
+  }
+
+  // Notification email — best-effort : n'échoue jamais la requête cliente.
+  try {
+    await notifyNewContactRequest({
+      name: input.name,
+      email: input.email,
+      phone: input.phone ?? null,
+      company: input.company ?? null,
+      service: serviceName ?? null,
+      budget: input.budget ?? null,
+      message: input.message,
+    })
+  } catch (err) {
+    console.error('[POST /api/contact] notification:', err)
   }
 
   const whatsappUrl = buildWhatsAppUrl({

@@ -71,6 +71,50 @@ export function checkRateLimit(
 }
 
 /**
+ * Fabrique un limiteur indépendant avec son propre store.
+ * Permet d'avoir des seuils différents selon l'endpoint (ex. analytics :
+ * 120 vues/heure, contre 5 messages/15 min pour le contact).
+ */
+export function createRateLimiter(options: { max: number; windowMs: number }) {
+  const localStore = new Map<string, RateLimitEntry>()
+  let timer: ReturnType<typeof setInterval> | null = null
+
+  function ensureCleanup() {
+    if (timer) return
+    timer = setInterval(() => {
+      const now = Date.now()
+      for (const [key, entry] of localStore) {
+        if (entry.resetAt < now) localStore.delete(key)
+      }
+    }, CLEANUP_INTERVAL_MS)
+    if (typeof timer.unref === 'function') timer.unref()
+  }
+
+  return function check(
+    ip: string,
+  ): { allowed: true } | { allowed: false; retryAfter: number } {
+    ensureCleanup()
+    const now = Date.now()
+    const entry = localStore.get(ip)
+
+    if (!entry || entry.resetAt < now) {
+      localStore.set(ip, { count: 1, resetAt: now + options.windowMs })
+      return { allowed: true }
+    }
+
+    if (entry.count >= options.max) {
+      return {
+        allowed: false,
+        retryAfter: Math.ceil((entry.resetAt - now) / 1000),
+      }
+    }
+
+    entry.count++
+    return { allowed: true }
+  }
+}
+
+/**
  * Extrait l'IP du client depuis les headers de la requête.
  * Respecte les proxies (Vercel, Cloudflare…).
  */
