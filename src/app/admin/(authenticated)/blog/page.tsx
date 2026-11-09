@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { formatDateTime } from '@/lib/utils/format'
 import { BlogRowActions } from './blog-row-actions'
 
-export const metadata: Metadata = { title: 'Blog' }
+export const metadata: Metadata = { title: 'Articles' }
 
 export default async function AdminBlogPage() {
   const { data: posts, count } = await getAllPosts()
@@ -16,7 +16,7 @@ export default async function AdminBlogPage() {
   return (
     <div>
       <PageHeader
-        title="Blog"
+        title="Articles"
         description={`${count} article${count > 1 ? 's' : ''}`}
         action={
           <Button asChild size="sm">
